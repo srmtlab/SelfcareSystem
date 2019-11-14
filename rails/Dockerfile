@@ -8,6 +8,6 @@ WORKDIR ${APP_DIR}
 RUN apk update \
     && apk add nodejs build-base mariadb-dev tzdata
 
-# ADD ./Gemfile ${APP_DIR}/Gemfile
-# ADD ./Gemfile.lock ${APP_DIR}/Gemfile.lock
-# RUN bundle install
+ADD ./Gemfile ${APP_DIR}/Gemfile
+ADD ./Gemfile.lock ${APP_DIR}/Gemfile.lock
+RUN bundle install
