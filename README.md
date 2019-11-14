@@ -31,6 +31,15 @@ docker-compose exec rails bundle exec rails generate controller Home
 - [コントローラの作成と命名規則(命名規約)](https://www.javadrive.jp/rails/controller/index1.html)
 - [Rails generate の使い方とコントローラーやモデルの命名規則](https://qiita.com/higeaaa/items/96c708d01a3dbb161f20)
 
+### ブランチのきり方
+```
+# shimizuブランチが作成され，自身もブランチの先へ移行する
+git checkout -b shimizu
+
+# ブランチの切り替え
+git checkout develop
+```
+
 # Authors
 - Kento Yasuda
 - Yota Shimizu
