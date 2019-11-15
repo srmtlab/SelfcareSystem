@@ -4,126 +4,121 @@
 /* WEBフォント導入 */
 /* 美咲フォント */
 
+@font-face {
+  font-family: "misaki1";
+  src: url("../font_misaki/misaki_gothic.ttf");
+}
+@font-face {
+  font-family: "misaki2";
+  src: url("../font_misaki/misaki_gothic_2nd.ttf");
+}
+@font-face {
+  font-family: "misaki3";
+  src: url("../font_misaki/misaki_mincho.ttf");
+}
 
-#home{
-    @font-face {
-        font-family: "misaki1";
-        src: url("../font_misaki/misaki_gothic.ttf");
-    }
-    @font-face {
-        font-family: "misaki2";
-        src: url("../font_misaki/misaki_gothic_2nd.ttf");
-    }
-    @font-face {
-        font-family: "misaki3";
-        src: url("../font_misaki/misaki_mincho.ttf");
-    }
-    
-    
-    /* スタイル */
-    @media screen and (min-width: 767px) {
-        /* スマホ画面に合わせて確認できるようにここは用意してあるけど書いていない
+/* スタイル */
+@media screen and (min-width: 767px) {
+  /* スマホ画面に合わせて確認できるようにここは用意してあるけど書いていない
            画面確認をする際はページ開いてF12押してからスマホ対応画面で確認 */
-    }
-    @media screen and (max-width: 767px){
-        
-        /* 画面上部の付属物 */
-        .attach {
-            width: 350px;
-            height: 50px;
-            margin: 5px auto;
-        }
-        
-        .back { /* 戻るボタン */
-            float: left;
-            width: 80px;
-        }
-        .prog { /* 進行度 */
-            width: 150px;
-            height: 43px;
-            margin: 5px 12px;
-            /* visibility: hidden; */
-        }
-        .forward { /* 進むボタン */
-            float: right;
-            width: 80px;
-        }
-        
-        
-        /* 画面内 */
-        .frame {
-            width: 350px;
-            height: 600px;
-            border: solid 3px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .start_title {
-            width: 350px;
-            margin: 40px 0 0;
-        }
-        .start_sub_title {
-            width: 350px;
-            margin: 0 0 20px;
-        }
-        .start_text {
-            text-align: center;
-            font-family: "misaki2";
-        }
-        
-        .character {
-            margin: 30px auto 50px;
-            display: block;
-        }
-        
-        .nes-container.is-rounded {
-            width: 320px;
-            margin: 0 auto;
-            padding: 10px 0;
-        }
-        .login_container_id {
-            width: 310px;
-            margin: 0 auto;
-        }
-        .login_container_pass {
-            width: 310px;
-            margin: 15px auto 20px;
-        }
-        .login_text_id {
-            margin: 0 20px 0 44px;
-            font-family: "misaki2";
-            display: inline;
-        }
-        .login_text_pass {
-            font-family: "misaki2";
-            display: inline;
-        }
-        .login_id {
-            width: 180px;
-        }
-        .login_pass {
-            width: 180px;
-        }
-        .login_btn {
-            margin: 0 auto;
-            display: block;
-        }
-        
-        .new_login_form {
-            margin: 22px auto 0;
-            text-align: center;
-        }
-        
-        
-        /* nes-???系フォント制御用 */
-        .nes-btn {
-            font-family: "misaki2";
-        }
-        
-        .nes-input {
-            font-family: "misaki2";
-        }
-        
-    }
+}
+@media screen and (max-width: 767px) {
+  /* 画面上部の付属物 */
+  .attach {
+    width: 350px;
+    height: 50px;
+    margin: 5px auto;
+  }
+
+  .back {
+    /* 戻るボタン */
+    float: left;
+    width: 80px;
+  }
+  .prog {
+    /* 進行度 */
+    width: 150px;
+    height: 43px;
+    margin: 5px 12px;
+    /* visibility: hidden; */
+  }
+  .forward {
+    /* 進むボタン */
+    float: right;
+    width: 80px;
+  }
+
+  /* 画面内 */
+  .frame {
+    width: 350px;
+    height: 600px;
+    border: solid 3px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .start_title {
+    width: 350px;
+    margin: 40px 0 0;
+  }
+  .start_sub_title {
+    width: 350px;
+    margin: 0 0 20px;
+  }
+  .start_text {
+    text-align: center;
+    font-family: "misaki2";
+  }
+
+  .character {
+    margin: 30px auto 50px;
+    display: block;
+  }
+
+  .nes-container.is-rounded {
+    width: 320px;
+    margin: 0 auto;
+    padding: 10px 0;
+  }
+  .login_container_id {
+    width: 310px;
+    margin: 0 auto;
+  }
+  .login_container_pass {
+    width: 310px;
+    margin: 15px auto 20px;
+  }
+  .login_text_id {
+    margin: 0 20px 0 44px;
+    font-family: "misaki2";
+    display: inline;
+  }
+  .login_text_pass {
+    font-family: "misaki2";
+    display: inline;
+  }
+  .login_id {
+    width: 180px;
+  }
+  .login_pass {
+    width: 180px;
+  }
+  .login_btn {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .new_login_form {
+    margin: 22px auto 0;
+    text-align: center;
+  }
+
+  /* nes-???系フォント制御用 */
+  .nes-btn {
+    font-family: "misaki2";
+  }
+
+  .nes-input {
+    font-family: "misaki2";
+  }
 }
