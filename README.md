@@ -16,7 +16,7 @@ docker-compose exec rails bundle exec rails db:create
 docker-compose exec rails bundle exec rails s -p 3000 -b '0.0.0.0'
 
 # launch development environment
-docker-compose exec rails bundle exec rails db:create
+docker-compose up -d
 docker-compose exec rails bundle exec rails s -p 3000 -b '0.0.0.0'
 ```
 
