@@ -23,7 +23,9 @@
            画面確認をする際はページ開いてF12押してからスマホ対応画面で確認 */
 }
 @media screen and (max-width: 767px) {
+  //###########################################
   /* 画面上部の付属物 */
+  //###########################################
   .attach {
     width: 350px;
     height: 50px;
@@ -48,29 +50,106 @@
     }
   }
 
+  //###########################################
   /* 画面内 */
+  //###########################################
   .frame {
     width: 350px;
     height: 600px;
     border: solid 3px;
     margin: 0 auto;
     position: relative;
+
+    //###########################################
+    /* ログイン・新規登録画面 */
+    //###########################################
+    .start_title {
+      width: 350px;
+      margin: 20px 0 0;
+    }
+    .start_sub_title {
+      width: 350px;
+      margin: 0 0 10px;
+    }
+    .start_text {
+      text-align: center;
+      font-family: "misaki2";
+    }
+    .character {
+      margin: 20px auto 20px;
+      display: block;
+    }
+    .nes-container.is-rounded.form_login {
+      width: 320px;
+      margin: 0 auto;
+      padding: 10px 0;
+    }
+    .login_container_id {
+      width: 310px;
+      margin: 0 auto;
+    }
+    .login_container_pass {
+      width: 310px;
+      margin: 15px auto 0;
+    }
+    .login_text_id {
+      margin: 0 20px 0 44px;
+      font-family: "misaki2";
+      display: inline;
+    }
+    .login_id {
+      width: 180px;
+    }
+    .login_text_pass {
+      font-family: "misaki2";
+      display: inline;
+    }
+    .login_pass {
+      width: 180px;
+    }
+    .login_remember {
+      width: 220px;
+      height: 25px;
+      margin: 10px auto 0;
+      font-family: "misaki2";
+    }
+    .login_btn {
+      width: 100px;
+      margin: 5px auto;
+
+      .nes-btn {
+        text-align: center;
+        width: 100px;
+      }
+    }
+    .login_render {
+      text-align: center;
+      width: 170px;
+      margin: 5px auto 0;
+      font-family: "misaki2";
+    }
   }
 
+  //###########################################
   /* font用 */
+  //###########################################
   .nes-btn {
     font-family: "misaki2";
   }
+  .nes-input {
+    font-family: "misaki2";
+  }
 
+  //###########################################
   /* test用 */
+  //###########################################
   .test {
     width: 100px;
     margin: 10px auto;
     display: block;
   }
 
+  //###########################################
   /* test用 views/users/sessions/new.html.erbに適用してます */
-  .form {
-    font-family: "misaki2";
-  }
+  //###########################################
 }

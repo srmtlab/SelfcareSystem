@@ -1,30 +1,45 @@
-<h2 class="login">Log in</h2>
+<!-- ログイン画面(Log in) -->
+<div class="start_title">
+	<p class="start_text">セルフケアアプリケーション</p>
+</div>
+<div class="start_sub_title">
+	<p class="start_text">Self-Care Application</p>
+</div>
+<!-- キャラクター -->
+<div class="character nes-octocat"></div>
 
-<div class="form">
+<!-- ログインフォーム -->
+<div class="nes-container is-rounded form_login">
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :ID %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <!-- ID入力 -->
+  <div class="login_container_id">
+    <%= f.label :time_balance, "ID\:", class: "login_text_id" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "nes-input login_id" %>
+  </div>
+  <!-- パスワード入力 -->
+  <div class="login_container_pass">
+    <%= f.label :"パスワード\:", class: "login_text_pass" %>
+    <%= f.password_field :password, autocomplete: "current-password", class: "nes-input login_pass" %>
   </div>
 
-  <div class="field">
-    <%= f.label :パスワード %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
+  <!-- チェックボックス:Remenber me -->
   <% if devise_mapping.rememberable? %>
-    <div class="field">
+    <div class="login_remember">
       <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+      <%= f.label :remember_me, "IDとパスワードを記憶する" %>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
+  <!-- ログインボタン -->
+  <div class="login_btn">
+    <%= f.submit "ログイン", class: "nes-btn" %>
   </div>
 <% end %>
 
-<%= render "users/shared/links" %>
+<!-- sign upやforgot password -->
+<div class="login_render">
+  <%= render "users/shared/links" %>
+</div>
 
 </div>
