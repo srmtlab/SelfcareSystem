@@ -75,9 +75,15 @@
       text-align: center;
       font-family: "misaki2";
     }
-    .character {
-      margin: 20px auto 20px;
+    .start_character {
+      width: 272px;
+      margin: 10px auto 10px;
       display: block;
+
+      .character {
+        width: 80px;
+        height: 120px;
+      }
     }
     .nes-container.is-rounded.form_login {
       width: 320px;
@@ -131,7 +137,7 @@
     }
     .login_signup_btn {
       width: 100px;
-      margin: 20px auto 0;
+      margin: 12px auto 0;
 
       .nes-btn {
         text-align: center;
