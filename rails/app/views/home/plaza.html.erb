@@ -1,1 +1,21 @@
+<!-- test用記録画面？へのリンクボタン -->
 <a href="/" class="nes-btn test">記録画面？</a>
+
+<!-- 広場画面 -->
+<div class="test_plaza">
+    <!-- 指標 -->
+    <div class="nes-container is-rounded test_text">
+        <p class="test_index">味噌汁</p>
+    </div>
+    <!-- 対話エージェント -->
+    <div class="test_character">
+        <%= image_tag "imgs/bear1.gif", class: "character" %>
+    </div>
+</div>
+
+<!-- 入力フォーム & Yes/Noボタン -->
+<div class="nes-field answer">
+	<input type="text" id="name_field" class="nes-input answer_text" placeholder="ここに解答を入力してね">
+</div>
+<button type="button" class="nes-btn btn_yes">はい</button>
+<button type="button" class="nes-btn btn_no">いいえ</button>

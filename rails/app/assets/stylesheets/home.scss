@@ -1,9 +1,10 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-/* WEBフォント導入 */
-/* 美咲フォント */
 
+//###########################################
+/* Webフォント導入：美咲フォント */
+//###########################################
 @font-face {
   font-family: "misaki1";
   src: url("./font_misaki/misaki_gothic.ttf");
@@ -17,7 +18,17 @@
   src: url("./font_misaki/misaki_mincho.ttf");
 }
 
-/* スタイル */
+//###########################################
+/* その他 */
+//###########################################
+p {
+  white-space: pre;
+  font-family: "misaki2";
+}
+
+//################################################################################################
+/* スタイル変更 */
+//################################################################################################
 @media screen and (min-width: 767px) {
   /* スマホ画面に合わせて確認できるようにここは用意してあるけど書いていない
            画面確認をする際はページ開いてF12押してからスマホ対応画面で確認 */
@@ -59,6 +70,7 @@
     border: solid 3px;
     margin: 0 auto;
     position: relative;
+    background: #98fb98;
 
     //###########################################
     /* ログイン・新規登録画面 */
@@ -73,7 +85,6 @@
     }
     .start_text {
       text-align: center;
-      font-family: "misaki2";
     }
     .start_character {
       width: 272px;
@@ -144,16 +155,53 @@
         width: 100px;
       }
     }
+
+    //###########################################
+    /* 広場画面 */
+    //###########################################
+    .answer {
+      position: absolute;
+      top: 465px;
+      left: 10px;
+      width: 315px;
+      //visibility: hidden;
+
+      .nes-input {
+        text-align: center;
+      }
+    }
+    .btn_yes {
+      position: absolute;
+      top: 530px;
+      left: 10px;
+      width: 150px;
+      //visibility: hidden;
+    }
+    .btn_no {
+      position: absolute;
+      top: 530px;
+      left: 177px;
+      width: 150px;
+      //visibility: hidden;
+    }
   }
 
   //###########################################
-  /* font用 */
+  /* font & background用 */
   //###########################################
   .nes-btn {
     font-family: "misaki2";
+    background: white;
   }
   .nes-input {
     font-family: "misaki2";
+    background: white;
+  }
+  .nes-container {
+    background: white;
+  }
+  .nes-field {
+    background: white;
   }
 
   //###########################################
@@ -165,7 +213,38 @@
     display: block;
   }
 
+  .test_plaza {
+    top: 70px;
+    left: 30px;
+    width: 150px;
+    position: absolute;
+
+    .nes-container.is-rounded.test_text {
+      width: 150px;
+      margin: 0 auto;
+      padding: 10px 0;
+
+      .test_index {
+        font-family: "misaki2";
+        text-align: center;
+        width: 100%;
+      }
+    }
+    .test_character {
+      width: 100px;
+      margin: 10px auto 0;
+
+      .character {
+        width: 100px;
+        height: 170px;
+      }
+    }
+  }
+
   //###########################################
-  /* test用 views/users/sessions/new.html.erbに適用してます */
+  /* test用 
+  views/users/sessions/new.html.erb
+  views/home/plaza.html.erb
+  に適用してます */
   //###########################################
 }
