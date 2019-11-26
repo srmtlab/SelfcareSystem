@@ -17,9 +17,9 @@
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <!-- ID入力 -->
-  <div class="login_container_id">
-    <%= f.label :time_balance, "ID\:", class: "login_text_id" %>
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "nes-input login_id" %>
+  <div class="login_container_email">
+    <%= f.label :time_balance, "E-mail\:", class: "login_text_email" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "nes-input login_email" %>
   </div>
   <!-- パスワード入力 -->
   <div class="login_container_pass">

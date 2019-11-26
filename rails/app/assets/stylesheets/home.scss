@@ -26,6 +26,10 @@ p {
   font-family: "misaki2";
 }
 
+body {
+  width: 100%;
+}
+
 //################################################################################################
 /* スタイル変更 */
 //################################################################################################
@@ -101,7 +105,7 @@ p {
       margin: 0 auto;
       padding: 10px 0;
     }
-    .login_container_id {
+    .login_container_email {
       width: 310px;
       margin: 0 auto;
     }
@@ -109,12 +113,12 @@ p {
       width: 310px;
       margin: 15px auto 0;
     }
-    .login_text_id {
-      margin: 0 20px 0 49px;
+    .login_text_email {
+      margin: 0 12px 0 25px;
       font-family: "misaki2";
       display: inline;
     }
-    .login_id {
+    .login_email {
       width: 180px;
     }
     .login_text_pass {
