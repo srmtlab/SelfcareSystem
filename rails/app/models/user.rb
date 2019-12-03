@@ -7,4 +7,6 @@ class User < ApplicationRecord
   has_many :avators, dependent: :destroy
   has_many :routines, dependent: :destroy
   has_many :schedules, dependent: :destroy
+
+  enum gender: { man: 0, woman: 1 }
 end
