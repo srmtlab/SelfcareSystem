@@ -4,9 +4,13 @@
 <!-- 広場画面 -->
 <div class="test_plaza">
     <!-- 指標 -->
+
     <div class="nes-container is-rounded test_text">
-        <p class="test_index">味噌汁</p>
+        <p class="test_index"><%= @routine.text %></p>
     </div>
+
+    
+
     <!-- 対話エージェント -->
     <div class="test_character">
         <%= image_tag "imgs/bear1.gif", class: "character" %>
