@@ -7,14 +7,14 @@ $(function () {
 	//#####################################################
 
 	//テストボタンクリックで戻る進むボタンのON/OFF切り替え
-	$(".test").on("click", function () {
-		if ($(".test").hasClass("attach_prog_off")) {
-			$(".test").removeClass("attach_prog_off");
-			$(".test").addClass("attach_prog_on");
+	$(".test_btn").on("click", function () {
+		if ($(".test_btn").hasClass("attach_prog_off")) {
+			$(".test_btn").removeClass("attach_prog_off");
+			$(".test_btn").addClass("attach_prog_on");
 			$(".btn_attach_forward").removeClass("is-disabled");
 		} else {
-			$(".test").removeClass("attach_prog_on");
-			$(".test").addClass("attach_prog_off");
+			$(".test_btn").removeClass("attach_prog_on");
+			$(".test_btn").addClass("attach_prog_off");
 			$(".attach_prog").val(0);
 			$(".btn_attach_back").addClass("is-disabled");
 			$(".btn_attach_forward").addClass("is-disabled");
