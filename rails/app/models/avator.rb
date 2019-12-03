@@ -1,0 +1,2 @@
+class Avator < ApplicationRecord
+end
