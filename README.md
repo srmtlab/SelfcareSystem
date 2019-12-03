@@ -29,10 +29,43 @@ docker-compose exec mysql sh
 ### generate Controller
 コントローラーを作成して，ルーティング（/config/routes.rb）を編集すれば使えるようになります．
 ```
-docker-compose exec rails bundle exec rails generate controller コントローラ名
+# railsコンテナに入る
+docker-compose exec rails sh
+
+bundle exec rails generate controller コントローラ名
 # 例
-docker-compose exec rails bundle exec rails generate controller Home
+bundle exec rails generate controller Home
 ```
+
+### make Model
+```
+# railsコンテナに入る
+docker-compose exec rails sh
+
+# モデルを作成する
+# モデルが作成された際に、マイグレーションファイル（DBの設計図のようなもの）も作成されます
+bundle exec rails generate model モデル名
+
+# 例 : Avatorモデルの作成
+bundle exec rails generate model Avator
+
+# migrate（MySQLにマイグレーションファイルの内容を適応する）
+bundle exec rails db:migrate
+
+-----------------------------
+# カラムを追加する
+bundle exec rails generate migration Addカラム名Toテーブル名
+# 例 : Userモデルにnameカラムを追加
+bundle exec rails generate migration AddNameToUsers
+# 例 : Userモデルに複数のカラムを追加
+bundle exec rails generate migration AddBasicInfoToUsers
+
+
+# migrate（MySQLにマイグレーションファイルの内容を適応する）
+bundle exec rails db:migrate
+
+```
+
 #### 参考
 - [コントローラの作成と命名規則(命名規約)](https://www.javadrive.jp/rails/controller/index1.html)
 - [Rails generate の使い方とコントローラーやモデルの命名規則](https://qiita.com/higeaaa/items/96c708d01a3dbb161f20)
