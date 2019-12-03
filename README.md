@@ -18,6 +18,12 @@ docker-compose exec rails bundle exec rails s -p 3000 -b '0.0.0.0'
 # launch development environment
 docker-compose up -d
 docker-compose exec rails bundle exec rails s -p 3000 -b '0.0.0.0'
+
+# railsコンテナに入る
+docker-compose exec rails sh
+
+# MySqlコンテナに入る
+docker-compose exec mysql sh
 ```
 
 ### generate Controller
