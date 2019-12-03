@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2019_12_03_031315) do
     t.integer "count", default: 0
     t.float "importance", default: 0.0
     t.float "confidence", default: 0.0
+    t.string "wd_label", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_routines_on_user_id"
