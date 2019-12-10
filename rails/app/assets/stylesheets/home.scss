@@ -302,6 +302,10 @@ body {
       z-index: 10;
       display: none;
 
+      .talk_who {
+        color: red;
+        margin: 0 0 5px 0;
+      }
       .talk_text {
         opacity: 0;
 

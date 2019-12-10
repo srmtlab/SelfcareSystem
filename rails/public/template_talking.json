@@ -9,15 +9,15 @@
     },
     {
         "who": 0,
-        "talk": "name,だよ。よろしく。"
+        "talk": "「name,」だよ。<br>よろしくね。"
     },
     {
         "who": 1,
-        "talk": "name,だよ。よろしく。"
+        "talk": "「name,」だよ。<br>よろしくね。"
     },
     {
         "who": 2,
-        "talk": "name,だよ。よろしく。"
+        "talk": "「name,」だよ。<br>よろしくね。"
     },
     {
         "who": -1,
@@ -41,7 +41,7 @@
     },
     {
         "who": 2,
-        "talk": "ぼくは「life_index,だよ。"
+        "talk": "ぼくは「life_index,"
     },
     {
         "who": -1,
@@ -49,11 +49,11 @@
     },
     {
         "who": 0,
-        "talk": "えーと、ぼくは「life_index,だよ。"
+        "talk": "えーと、ぼくは「life_index,"
     },
     {
         "who": 1,
-        "talk": "ぼくは「life_index,だよ。"
+        "talk": "ぼくは「life_index,"
     },
     {
         "who": -1,

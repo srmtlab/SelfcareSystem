@@ -37,9 +37,10 @@ $(function () {
 	$(".char_center").attr("src", image_path(center_imgs[0]));
 	$(".char_right").attr("src", image_path(right_imgs[0]));
 	//広場画面案内
-	$.getJSON("/template_talk.json", function (data) {
+	$.getJSON("/template_talking.json", function (data) {
 		//導入
 		$(".btn_history_start").on("click", function () {
+			$(".btn_next").prop("disabled", true);
 			$(".talk_history").fadeOut(1000, function () {
 				$(".talk_history").css("visibility", "hidden");
 				$(".talk_history").css("display", "block");
@@ -58,6 +59,7 @@ $(function () {
 		});
 		//テンプレート進行
 		$(".btn_next").on("click", function () {
+			$(".btn_next").prop("disabled", true);
 			if (i < data.length) {
 				if (data[i].who != data[i - 1].who) {
 					if (data[i - 1].who == -1) {
@@ -90,8 +92,13 @@ $(function () {
 				}
 				display_talk(data[i++], routines, avator_left, avator_center, avator_right);
 			} else if (i == data.length) {
-				$(".btn_next").fadeOut(1000);
+				$(".btn_next").fadeOut(1000, function () {
+					//テスト用のお遊び
+					$(".btn_no").text("記録画面");
+					$(".btn_no").css("visibility", "visible");
+				});
 				$(".talk").fadeOut(1000, function () {
+					$(".talk_who").text("");
 					$(".talk_text").html("");
 					$(".talker").attr("src", image_path(""));
 					$(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.png"));
@@ -115,7 +122,6 @@ $(function () {
 	});
 
 
-
 	//########################################################
 	//使用関数
 	//########################################################
@@ -123,20 +129,23 @@ $(function () {
 	//会話文を表示させる & 履歴に会話文を追加
 	//文字を1文字ずつ表示する
 	function display_talk(data, routines, ava_left, ava_center, ava_right) {
-		$(".btn_next").addClass("is-disabled");
 		var talking = data.talk;
 		//履歴に追加する
 		if (data.who == -1) {
 			$(".talk_history_list").append("<p class=\"talk_history_who\">プラザ</p>");
+			$(".talk_who").text("プラザ");
 		} else if (data.who == 0) {
 			$(".talk_history_list").append("<p class=\"talk_history_who\">" + ava_left.name + "</p>");
 			talking = replace_talk(talking, routines[0], ava_left);
+			$(".talk_who").text(ava_left.name);
 		} else if (data.who == 1) {
 			$(".talk_history_list").append("<p class=\"talk_history_who\">" + ava_center.name + "</p>");
 			talking = replace_talk(talking, routines[1], ava_center);
+			$(".talk_who").text(ava_center.name);
 		} else if (data.who == 2) {
 			$(".talk_history_list").append("<p class=\"talk_history_who\">" + ava_right.name + "</p>");
 			talking = replace_talk(talking, routines[2], ava_right);
+			$(".talk_who").text(ava_right.name);
 		}
 		$(".talk_history_list").append("<p>" + talking + "</p>");
 		//全文字をspanタグで囲む
@@ -153,7 +162,7 @@ $(function () {
 		for (var i = 0; i <= $(".talk_text").children().size(); i++) {
 			$(".talk_text").children("span:eq(" + i + ")").delay(35 * i).animate({ "opacity": 1 }, 50);
 		};
-		$(".btn_next").removeClass("is-disabled");
+		$(".btn_next").prop("disabled", false);
 	}
 
 	//表示するキャラクター画像を決定
@@ -184,18 +193,18 @@ $(function () {
 		var user_life_index = life_index.text;
 		//var user_category = user[num].life_index_category;
 		var user_period = life_index.period;
-		var user_count = life_index.user_count;
+		var user_count = life_index.count;
 		if (talking.indexOf("name,") != -1) {
 			talking = talking.replace("name,", user_name);
 		}
 		if (talking.indexOf("life_index,") != -1) {
 			talking = talking.replace("life_index,", user_life_index) + "」を<br>";
 			if (user_period == 1) {
-				talking = talking + "「1日に" + user_count + "回」";
+				talking = talking + "「1日に" + user_count + "回」だよ。";
 			} else if (user_period == 7) {
-				talking = talking + "「1週間に" + user_count + "回」";
+				talking = talking + "「1週間に" + user_count + "回」だよ。";
 			} else if (user_period == 30) {
-				talking = talking + "「1か月に" + user_count + "回」";
+				talking = talking + "「1か月に" + user_count + "回」だよ。";
 			}
 			/*
 			if (user_category == "food") {
@@ -214,6 +223,10 @@ $(function () {
 	//テスト（お遊び） ############################################################
 	//#############################################################################
 
+	//記録画面ボタン(Noボタン)で記録画面に遷移
+	$(".btn_no").on("click", function () {
+		window.location.href = '/';
+	});
 
 	/*
 	//image_pathの使い方
