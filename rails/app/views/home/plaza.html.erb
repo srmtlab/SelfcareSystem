@@ -1,18 +1,3 @@
-<!-- test用記録画面？へのリンクボタン -->
-<!-- <a href="/" class="nes-btn test_plaza_btn">記録画面？</a> -->
-<!-- 広場画面 -->
-<!-- <div class="test_plaza"> -->
-    <!-- 指標 -->
-    <!-- <div class="nes-container is-rounded test_text">
-        <p class="test_index"><%= @routine.text %></p>
-    </div> -->
-    <!-- 対話エージェント -->
-    <!-- <div class="test_character">
-        <%= image_tag "imgs/bear/bear1.gif", class: "character" %>
-    </div> -->
-<!-- </div> -->
-
-
 <div class="swiper-container">
     <div class="swiper-wrapper plaza form1-off form2-off">
         <!-- 左ページ -->
@@ -70,7 +55,11 @@
 <!-- 会話履歴 -->
 <div class="nes-container is-rounded talk_history">
     <button type="button" class="nes-btn btn_history_close">閉じる</button>
-    <div class="talk_history_list"></div>
+    <div class="talk_history_list">
+        <p class="history_title">広場画面</p>
+        <p class="history_intro">動物たちの話を聞いて<br>自分も意見を出してみよう。</p>
+    </div>
+    <button type="button" class="nes-btn btn_history_start">始める</button>
 </div>
 <!-- 入力フォーム & Yes/Noボタン & 履歴/次へボタン -->
 <div class="nes-field answer">

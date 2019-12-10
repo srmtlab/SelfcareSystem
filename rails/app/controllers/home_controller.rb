@@ -1,27 +1,5 @@
 class HomeController < ApplicationController
     def index
-        cur_user = User.all[0] # user:shimizu
-        cur_user_routines = cur_user.routines # shimizuのroutine全て
-        @cur_user_routine1 = cur_user_routines[0].text
-        @cur_user_routine2 = cur_user_routines[1].text
-
-        routine_num = Routine.count # 全routineの数
-        i = 0
-        check = [false]
-        while check.include?(false) do
-            i = 0
-            check = []
-            left_routine = Routine.all[rand(routine_num)]
-            for cur_user_routine in cur_user_routines do
-                if cur_user_routine == left_routine then
-                    check[i] = false
-                else
-                    check[i] = true
-                end
-                i += 1
-            end
-        end
-        @routine_left = left_routine.text
 
     end
 
