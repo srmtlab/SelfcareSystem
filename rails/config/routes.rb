@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   root "home#index"
   get "plaza", to: 'home#plaza'
+  post "plaza/routines", to: "home#routines"
   # get '/', to: 'home#index'
 
   devise_for :users, :controllers => {

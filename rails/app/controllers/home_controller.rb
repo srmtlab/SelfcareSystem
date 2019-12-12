@@ -1,30 +1,5 @@
 class HomeController < ApplicationController
     def index
-        user_num = User.count
-        selected_routines = []
-
-        while selected_routines.length < 3 do
-            # selected_user: ランダムに選択された表示ユーザ候補
-            selected_user = User.all[rand(user_num)]
-            if selected_user != current_user then
-                if selected_routines.length > 0 then
-                    selected_count = 0
-                    for s_routine in selected_routines do
-                        if s_routine.user != selected_user then
-                            selected_count += 1
-                        else
-                            break
-                        end
-                    end
-                    if selected_count == selected_routines.length then
-                        selected_routines.push(selected_user.routines[rand(selected_user.routines.count)])
-                    end
-                else
-                    selected_routines.push(selected_user.routines[rand(selected_user.routines.count)])
-                end
-            end
-        end
-        @routines_selected = selected_routines
     end
 
     def plaza
@@ -54,6 +29,30 @@ class HomeController < ApplicationController
         end
         @routines_selected = selected_routines
         
+    end
+
+    def routines
+        routine = Routine.new(
+            user_id: current_user.id,
+            text: params['text']
+            )
+
+        
+        # TODO: 参考
+        # routine = Routine.find(user_id: current_user, text: "味噌汁")
+        # routine.text = "aaaaa"
+        # routine.save
+
+        routine.importance = 2
+
+        if routine.save
+            # もし保存が成功したならば
+            render :json => {text: routine.text, user_name: current_user.name} 
+        end
+    end
+
+    def routine_params
+        # TODO: strong paramsを参考にして書き換えたりとかする
     end
 end
 # routine_num = Routine.count

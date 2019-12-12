@@ -37,6 +37,7 @@ $(function () {
 	$(".char_center").attr("src", image_path(center_imgs[0]));
 	$(".char_right").attr("src", image_path(right_imgs[0]));
 	//広場画面案内
+	// FIXME: URLを変更する
 	$.getJSON("/template_talking.json", function (data) {
 		//導入
 		$(".btn_history_start").on("click", function () {
@@ -217,7 +218,27 @@ $(function () {
 		return talking;
 	}
 
+	$(".btn_yes").on("click", function () {
+		$.ajax({
+			url: '/plaza/routines',
+			type: 'POST',
+			data: {
+				'text': $("#name_field").val()
+			}
+		})
+			// Ajaxリクエストが成功した時発動
+			.done((data) => {
+				$(".talk_text").html(data["user_name"] + "さん" + data["text"] + "を登録しました");
+			})
+			// Ajaxリクエストが失敗した時発動
+			.fail((data) => {
 
+			})
+			// Ajaxリクエストが成功・失敗どちらでも発動
+			.always((data) => {
+
+			});
+	});
 
 	//#############################################################################
 	//テスト（お遊び） ############################################################
@@ -225,7 +246,41 @@ $(function () {
 
 	//記録画面ボタン(Noボタン)で記録画面に遷移
 	$(".btn_no").on("click", function () {
-		window.location.href = '/';
+		if (!$(".plaza").hasClass("form2-on")) {
+			window.location.href = '/';
+		}
+	});
+
+	$(".btn_attach_forward").on("click", function () {
+		if (!$(".btn_attach_forward").hasClass("is-disabled")) {
+			if ($(".plaza").hasClass("form2-off")) {
+				$(".plaza").removeClass("form2-off");
+				$(".plaza").addClass("form2-on");
+				$(".btn_no").text("いいえ");
+				$(".answer").css("visibility", "visible");
+				$(".btn_yes").css("visibility", "visible");
+				$(".talk").css("visibility", "visible");
+
+				$(".btn_history").addClass("forward_on");
+				if (!$(".btn_history").hasClass("back_on")) {
+					$(".btn_history").css("visibility", "hidden");
+				}
+
+			} else {
+				$(".plaza").removeClass("form2-on");
+				$(".plaza").addClass("form2-off");
+				$(".answer").css("visibility", "hidden");
+				$(".btn_yes").css("visibility", "hidden");
+				$(".btn_no").text("記録画面");
+				$(".talk").css("visibility", "hidden");
+
+				$(".btn_history").removeClass("forward_on");
+				if (!$(".btn_history").hasClass("back_on")) {
+					$(".btn_history").css("visibility", "visible");
+				}
+
+			}
+		}
 	});
 
 	/*
