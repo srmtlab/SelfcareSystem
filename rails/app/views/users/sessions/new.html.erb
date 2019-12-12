@@ -1,26 +1,53 @@
-<h2>Log in</h2>
+<!-- ログイン画面(Log in) -->
+<div class="start_title">
+	<p class="start_text">セルフケアアプリケーション</p>
+</div>
+<div class="start_sub_title">
+	<p class="start_text">Self-Care Application</p>
+</div>
+<!-- キャラクター -->
+<div class="start_character">
+  <%= image_tag "imgs/cat/cat1.png", class: "character" %>
+  <%= image_tag "imgs/bear/bear1.png", class: "character" %>
+  <%= image_tag "imgs/rabbit/rabbit1.png", class: "character" %>
+</div>
+
+<!-- ログインフォーム -->
+<div class="nes-container is-rounded form_login">
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  <!-- ID入力 -->
+  <div class="login_container_email">
+    <%= f.label :time_balance, "E-mail\:", class: "login_text_email" %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "nes-input login_email" %>
+  </div>
+  <!-- パスワード入力 -->
+  <div class="login_container_pass">
+    <%= f.label :"パスワード\:", class: "login_text_pass" %>
+    <%= f.password_field :password, autocomplete: "current-password", class: "nes-input login_pass" %>
   </div>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
+  <!-- チェックボックス:Remenber me -->
   <% if devise_mapping.rememberable? %>
-    <div class="field">
+    <div class="login_remember">
       <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+      <%= f.label :remember_me, "次回以降ログインしたままにする" %>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
+  <!-- ログインボタン -->
+  <div class="login_btn">
+    <%= f.submit "ログイン", class: "nes-btn" %>
   </div>
 <% end %>
 
-<%= render "users/shared/links" %>
+<!-- パスワードを忘れた時用 -->
+<div class="login_render">
+  <%= link_to "パスワードを忘れたら…", new_password_path(resource_name) %><br />
+</div>
+
+</div>
+
+<div class="login_signup_btn">
+  <%= link_to "新規登録", new_registration_path(resource_name), class: "nes-btn" %>
+</div>

@@ -1,0 +1,78 @@
+<%= javascript_tag do %>
+    var routines = <%= raw @routines_selected.to_json %>;
+    var avator_left = <%= raw @routines_selected[0].user.avators[0].to_json %>;
+    var avator_center = <%= raw @routines_selected[1].user.avators[0].to_json %>;
+    var avator_right = <%= raw @routines_selected[2].user.avators[0].to_json %>;
+<% end %>
+<div class="swiper-container">
+    <div class="swiper-wrapper plaza form1-off form2-off">
+        <!-- 左ページ -->
+        <div class="swiper-slide plaza_container1">
+            <div class="char_container1">
+                <div class="nes-container is-rounded life_index_container1">
+                    <p class="life_index_left">
+                        <!-- 指標 -->
+                    </p>
+                </div>
+                <!-- 左のキャラクター画像 -->
+                <%= image_tag "", class: "char_left" %>
+            </div>
+            <%= image_tag "imgs/other/table2-1.png", class: "table_left" %>
+        </div>
+        <!-- 中央ページ -->
+        <div class="swiper-slide plaza_container2">
+            <div class="char_container2">
+                <div class="nes-container is-rounded life_index_container2">
+                    <p class="life_index_center">
+                        <!-- 指標 -->
+                    </p>
+                </div>
+                <!-- 真ん中のキャラクター画像 -->
+                <%= image_tag "", class: "char_center" %>
+            </div>
+            <%= image_tag "imgs/fairy/fairy_winter1.png", class: "fairy" %>
+            <%= image_tag "imgs/other/table2.png", class: "table_center" %>
+        </div>
+        <!-- 右ページ -->
+        <div class="swiper-slide plaza_container3">
+            <div class="char_container3">
+                <div class="nes-container is-rounded life_index_container3">
+                    <p class="life_index_right">
+                        <!-- 指標 -->
+                    </p>
+                </div>
+                <!-- 右のキャラクター画像 -->
+                <%= image_tag "", class: "char_right" %>
+            </div>
+            <%= image_tag "imgs/other/table2-2.png", class: "table_right" %>
+        </div>
+    </div>
+    <!-- ページネーション、画面移動ボタン -->
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev nes-btn">←</div>
+    <div class="swiper-button-next nes-btn">→</div>
+</div>
+
+<!-- 会話表示部分 -->
+<div class="nes-container is-rounded talk">
+    <p class="talk_who"></p>
+    <p class="talk_text"></p>
+    <img class="talker">
+</div>
+<!-- 会話履歴 -->
+<div class="nes-container is-rounded talk_history">
+    <button type="button" class="nes-btn btn_history_close">閉じる</button>
+    <div class="talk_history_list">
+        <p class="history_title">広場画面</p>
+        <p class="history_intro">動物たちの話を聞いて<br>自分も意見を出してみよう。</p>
+    </div>
+    <button type="button" class="nes-btn btn_history_start">始める</button>
+</div>
+<!-- 入力フォーム & Yes/Noボタン & 履歴/次へボタン -->
+<div class="nes-field answer">
+	<input type="text" id="name_field" class="nes-input answer_text" placeholder="ここに解答を入力してね">
+</div>
+<button type="button" class="nes-btn btn_yes">はい</button>
+<button type="button" class="nes-btn btn_no">いいえ</button>
+<button type="button" class="nes-btn btn_history">履歴</button>
+<button type="button" class="nes-btn btn_next">次へ</button>
