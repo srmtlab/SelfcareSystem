@@ -9,15 +9,15 @@
     },
     {
         "who": 0,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": 1,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": 2,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": -1,
@@ -41,7 +41,11 @@
     },
     {
         "who": 2,
-        "talk": "ぼくは「life_index,"
+        "talk": "ぼくはlife_index,"
+    },
+    {
+        "who": 2,
+        "talk": "これをするとcategory,につながるんだ。"
     },
     {
         "who": -1,
@@ -49,11 +53,19 @@
     },
     {
         "who": 0,
-        "talk": "えーと、ぼくは「life_index,"
+        "talk": "えーと、ぼくはlife_index,"
+    },
+    {
+        "who": 0,
+        "talk": "これをするとcategory,になると思う。"
     },
     {
         "who": 1,
-        "talk": "ぼくは「life_index,"
+        "talk": "ぼくはlife_index,"
+    },
+    {
+        "who": 1,
+        "talk": "これをするとcategory,ができるね。"
     },
     {
         "who": -1,

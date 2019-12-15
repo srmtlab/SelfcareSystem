@@ -1,3 +1,4 @@
+<%= javascript_include_tag "plaza.js" %>
 <%= javascript_tag do %>
     var routines = <%= raw @routines_selected.to_json %>;
     var avator_left = <%= raw @routines_selected[0].user.avators[0].to_json %>;

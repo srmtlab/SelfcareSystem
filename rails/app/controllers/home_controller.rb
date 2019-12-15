@@ -1,5 +1,8 @@
 class HomeController < ApplicationController
     def index
+        user = User.all[5]
+        routine = user.routines[0]
+        @category = routine.routine_categories[0].category
     end
 
     def plaza
