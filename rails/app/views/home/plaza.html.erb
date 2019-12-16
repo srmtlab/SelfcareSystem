@@ -1,9 +1,8 @@
 <%= javascript_include_tag "plaza.js" %>
 <%= javascript_tag do %>
     var routines = <%= raw @routines_selected.to_json %>;
-    var avator_left = <%= raw @routines_selected[0].user.avators[0].to_json %>;
-    var avator_center = <%= raw @routines_selected[1].user.avators[0].to_json %>;
-    var avator_right = <%= raw @routines_selected[2].user.avators[0].to_json %>;
+    var categories = <%= raw @categories_selected.to_json %>
+    var avators = <%= raw @avators_selected.to_json %>;
 <% end %>
 <div class="swiper-container">
     <div class="swiper-wrapper plaza form1-off form2-off">

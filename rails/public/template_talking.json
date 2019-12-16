@@ -45,7 +45,7 @@
     },
     {
         "who": 2,
-        "talk": "これをするとcategory,につながるんだ。"
+        "talk": "これをすると<br>category,につながるんだ。"
     },
     {
         "who": -1,
@@ -57,7 +57,7 @@
     },
     {
         "who": 0,
-        "talk": "これをするとcategory,になると思う。"
+        "talk": "これが<br>category,になると思う。"
     },
     {
         "who": 1,
@@ -65,7 +65,7 @@
     },
     {
         "who": 1,
-        "talk": "これをするとcategory,ができるね。"
+        "talk": "これのおかげで<br>category,ができるね。"
     },
     {
         "who": -1,

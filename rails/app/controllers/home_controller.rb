@@ -1,13 +1,12 @@
 class HomeController < ApplicationController
     def index
-        user = User.all[5]
-        routine = user.routines[0]
-        @category = routine.routine_categories[0].category
     end
 
     def plaza
         user_num = User.count
         selected_routines = []
+        selected_categories = []
+        selected_avators = []
 
         while selected_routines.length < 3 do
             # selected_user: ランダムに選択された表示ユーザ候補
@@ -23,14 +22,27 @@ class HomeController < ApplicationController
                         end
                     end
                     if selected_count == selected_routines.length then
-                        selected_routines.push(selected_user.routines[rand(selected_user.routines.count)])
+                        selected_routine = selected_user.routines[rand(selected_user.routines.count)]
+                        selected_routines.push(selected_routine)
                     end
                 else
-                    selected_routines.push(selected_user.routines[rand(selected_user.routines.count)])
+                    selected_routine = selected_user.routines[rand(selected_user.routines.count)]
+                    selected_routines.push(selected_routine)
                 end
             end
         end
+        for routine in selected_routines do
+            categories = []
+            routine_categories_num = routine.routine_categories.count
+            for i in 0..(routine_categories_num-1) do
+                categories.push(routine.routine_categories[i].category.name)
+            end
+            selected_categories.push(categories)
+            selected_avators.push(routine.user.avators[0])
+        end
         @routines_selected = selected_routines
+        @categories_selected = selected_categories
+        @avators_selected = selected_avators
         
     end
 
