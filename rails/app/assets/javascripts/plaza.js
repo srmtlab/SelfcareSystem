@@ -1,8 +1,8 @@
 $(function () {
 
-    //#############################################################################
-    //広場画面用js ################################################################
-    //#############################################################################
+    //##################################################################################################
+    //広場画面用js #####################################################################################
+    //##################################################################################################
 
     //########################################################
     //swiper.js 導入
@@ -18,12 +18,14 @@ $(function () {
         initialSlide: 1,
     });
 
-    //########################################################
-    //広場画面動作プログラム
-    //########################################################
+    //###############################################################################################
+    //広場画面動作プログラム  ########################################################################
+    //###############################################################################################
 
     //広場画面動作
+    //######################################
     //広場画面事前準備
+    //######################################
     var i = 1;
     swiper.allowTouchMove = false;
     //指標抽出、画像決定
@@ -40,7 +42,9 @@ $(function () {
     var category_center = categories[1][Math.floor(Math.random() * categories[1].length)]
     var category_right = categories[2][Math.floor(Math.random() * categories[2].length)]
     var category_list = [category_left, category_center, category_right]
+    //######################################
     //広場画面案内
+    //######################################
     // FIXME: URLを変更する
     $.getJSON("/template_talking.json", function (data) {
         //導入
@@ -58,11 +62,13 @@ $(function () {
                 $(".talk").fadeIn(1000, function () {
                     $(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.gif"));
                     $(".talker").attr("src", image_path("imgs/fairy/fairy_winter1.png"));
-                    display_talk(data[0], routines, category_list, avators);
+                    display_talk(data[0], current_user.name, routines, category_list, avators);
                 });
             });
         });
+        //######################################
         //テンプレート進行
+        //######################################
         $(".btn_next").on("click", function () {
             if (i < data.length) {
                 $(".btn_next").prop("disabled", true);
@@ -77,7 +83,7 @@ $(function () {
                         $(".char_right").attr("src", image_path(imgs_right[0]));
                     }
                 }
-                if (data[i].who == -1 || data[i].who == 1) {
+                if (data[i].who < 0 || data[i].who == 1) {
                     swiper.slideTo(1);
                     if (data[i].who < 0) {
                         $(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.gif"));
@@ -95,7 +101,7 @@ $(function () {
                     $(".char_right").attr("src", image_path(imgs_right[1]));
                     $(".talker").attr("src", image_path(imgs_right[0]));
                 }
-                display_talk(data[i++], routines, category_list, avators);
+                display_talk(data[i++], current_user.name, routines, category_list, avators);
             } else if (i == data.length) {
                 $(".btn_next").fadeOut(1000, function () {
                     $(".btn_next").text("記録画面");
@@ -115,7 +121,8 @@ $(function () {
                 });
                 i += 1
             } else if (i > data.length) {
-                //記録画面ボタン(Noボタン)で記録画面に遷移
+                //記録画面ボタン(元次へボタン)で記録画面に遷移
+                //FIXME: 記録画面以外（安田の質問画面）にも遷移したい
                 window.location.href = '/';
             }
         });
@@ -129,56 +136,89 @@ $(function () {
         $(".talk_history").css("visibility", "hidden");
     });
 
+    //######################################
+    //Yes/Noボタンで指標入力管理
+    //######################################
+    //TODO:
     $(".btn_yes").on("click", function () {
-        $.ajax({
-            url: '/plaza/routines',
-            type: 'POST',
-            data: {
-                "answer": $("#name_field").val()
-            }
-        })
-            // Ajaxリクエストが成功した時発動
-            .done((data) => {
+        if ($(".plaza").hasClass("answer-off")) {
 
-                //$(".talk_text").html(data["user_name"] + "さん" + data["text"] + "を登録しました");
+        } else if ($(".plaza").hasClass("answer-on")) {
+            $.ajax({
+                url: '/plaza/routines',
+                type: 'POST',
+                data: {
+                    "answer": $("#name_field").val()
+                }
             })
-            // Ajaxリクエストが失敗した時発動
-            .fail((data) => {
+                // Ajaxリクエストが成功した時発動
+                .done((data) => {
 
-            })
-            // Ajaxリクエストが成功・失敗どちらでも発動
-            .always((data) => {
+                    //$(".talk_text").html(data["user_name"] + "さん" + data["text"] + "を登録しました");
+                })
+                // Ajaxリクエストが失敗した時発動
+                .fail((data) => {
 
+                })
+                // Ajaxリクエストが成功・失敗どちらでも発動
+                .always((data) => {
+
+                });
+        }
+    });
+
+    $(".btn_no").on("click", function () {
+        if ($(".plaza").hasClass("answer-off")) {
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_yes").fadeOut(1000);
+            $(".btn_no").fadeOut(1000, function () {
+                data_no = { "who": -1, "talk": "そっか、残念...。<br>まだ今度見つかるといいね。" };
+                display_talk(data_no, current_user.name, routines, category_list, avators);
+                $(".btn_next").fadeIn(1000, function () {
+                    $(".btn_next").prop("disabled", false);
+                });
             });
+        } else if ($(".plaza").hasClass("answer-on")) {
+
+        }
     });
 
 
-    //########################################################
-    //使用関数
-    //########################################################
+    //####################################################################################################
+    //使用関数  ##########################################################################################
+    //####################################################################################################
 
+    //######################################
     //会話文を表示させる & 履歴に会話文を追加
     //文字を1文字ずつ表示する
-    function display_talk(data, routines, category_list, avators) {
+    //######################################
+    function display_talk(data, current_user_name, routines, category_list, avators) {
         var talking = data.talk;
         //履歴に追加する
         if (data.who < 0) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">プラザ</p>");
+            talking = replace_talk(current_user_name, talking, 0, 0, 0);
             $(".talk_who").text("プラザ");
         } else if (data.who == 0) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[0].name + "</p>");
-            talking = replace_talk(talking, routines[0], category_list[0], avators[0]);
+            talking = replace_talk(current_user_name, talking, routines[0], category_list[0], avators[0]);
             $(".talk_who").text(avators[0].name);
         } else if (data.who == 1) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[1].name + "</p>");
-            talking = replace_talk(talking, routines[1], category_list[1], avators[1]);
+            talking = replace_talk(current_user_name, talking, routines[1], category_list[1], avators[1]);
             $(".talk_who").text(avators[1].name);
         } else if (data.who == 2) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[2].name + "</p>");
-            talking = replace_talk(talking, routines[2], category_list[2], avators[2]);
+            talking = replace_talk(current_user_name, talking, routines[2], category_list[2], avators[2]);
             $(".talk_who").text(avators[2].name);
         }
-        $(".talk_history_list").append("<p>" + talking + "</p>");
+        $(".talk_history_list").append("<p" + talking + "</p>");
+        if (talking.indexOf(" class=\"talk_history_back\">") != -1) {
+            talking = talking.replace(" class=\"talk_history_back\">", "");
+        } else if (talking.indexOf(">") != -1) {
+            talking = talking.replace(">", "");
+        }
         //全文字をspanタグで囲む
         $(".talk_text").css({ "opacity": 0 });
         $(".talk_text span").css({ "opacity": 0 });
@@ -193,10 +233,70 @@ $(function () {
         for (var i = 0; i <= $(".talk_text").children().size(); i++) {
             $(".talk_text").children("span:eq(" + i + ")").delay(35 * i).animate({ "opacity": 1 }, 50);
         };
-        $(".btn_next").prop("disabled", false);
+        if (data.who == -2) {
+            //nextボタンを消して、Yes/Noボタンで返答を行うように誘導
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_next").fadeOut(1000);
+            $(".btn_yes").fadeIn(1000);
+            $(".btn_no").fadeIn(1000, function () {
+                $(".btn_yes").prop("disabled", false);
+                $(".btn_no").prop("disabled", false);
+            });
+        } else {
+            $(".btn_next").prop("disabled", false);
+        }
     }
 
-    //表示するキャラクター画像を決定
+    //######################################
+    //キャラクターの話の中で現れるname,とlife_index,をキャラの名前、指標に置換する
+    //######################################
+    function replace_talk(current_user_name, talk, routine, category, avator) {
+        var talking = talk;
+        var user_name = avator.name;
+        var user_routine = routine.text;
+        var user_period = routine.period;
+        var user_count = routine.count;
+        var replace_check = false;
+        if (talking.indexOf("name,") != -1) {
+            talking = talking.replace("name,", "「" + user_name + "」");
+        }
+        if (talking.indexOf("current_user,") != -1) {
+            talking = talking.replace("current_user,", "「" + current_user_name + "」");
+        }
+        if (talking.indexOf("category,") != -1) {
+            if (category == "health") {
+                talking = talking.replace("category,", "「身体のリラックス」<br>");
+            } else if (category == "mind") {
+                talking = talking.replace("category,", "「感覚に働きかける<br>リラックス」");
+            } else if (category == "sociality") {
+                talking = talking.replace("category,", "「対人関係によるリラックス」<br>");
+            } else if (category == "self_expression") {
+                talking = talking.replace("category,", "「学びや精神に働きかける<br>リラックス」");
+            }
+            replace_check = true;
+        }
+        if (talking.indexOf("life_index,") != -1) {
+            talking = talking.replace("life_index,", "「" + user_routine + "」を<br>");
+            if (user_period == 1) {
+                talking = talking + "「1日に" + user_count + "回」だよ。";
+            } else if (user_period == 7) {
+                talking = talking + "「1週間に" + user_count + "回」だよ。";
+            } else if (user_period == 30) {
+                talking = talking + "「1か月に" + user_count + "回」だよ。";
+            }
+            replace_check = true;
+        }
+        if (replace_check == true) {
+            return " class=\"talk_history_back\">" + talking;
+        } else {
+            return ">" + talking;
+        }
+    }
+
+    //######################################
+    //引数からキャラクターのpng+gifを生成 ###
+    //######################################
     function make_char_imgs(arr, dir) {
         var char_icon = arr.icon;
         var char_img = [];
@@ -217,45 +317,13 @@ $(function () {
         }
     }
 
-    //キャラクターの話の中で現れるname,とlife_index,をキャラの名前、指標に置換する
-    function replace_talk(talk, routine, category, avator) {
-        var talking = talk;
-        var user_name = avator.name;
-        var user_routine = routine.text;
-        var user_period = routine.period;
-        var user_count = routine.count;
-        if (talking.indexOf("name,") != -1) {
-            talking = talking.replace("name,", "「" + user_name + "」");
-        }
-        if (talking.indexOf("category,") != -1) {
-            if (category == "health") {
-                talking = talking.replace("category,", "「身体のリラックス」<br>");
-            } else if (category == "mind") {
-                talking = talking.replace("category,", "「感覚に働きかける<br>リラックス」");
-            } else if (category == "sociality") {
-                talking = talking.replace("category,", "「対人関係によるリラックス」<br>");
-            } else if (category == "self_expression") {
-                talking = talking.replace("category,", "「学びや精神に働きかける<br>リラックス」");
-            }
-        }
-        if (talking.indexOf("life_index,") != -1) {
-            talking = talking.replace("life_index,", "「" + user_routine + "」を<br>");
-            if (user_period == 1) {
-                talking = talking + "「1日に" + user_count + "回」だよ。";
-            } else if (user_period == 7) {
-                talking = talking + "「1週間に" + user_count + "回」だよ。";
-            } else if (user_period == 30) {
-                talking = talking + "「1か月に" + user_count + "回」だよ。";
-            }
-        }
-        return talking;
-    }
-
 
     //#############################################################################
     //テスト（お遊び） ############################################################
     //#############################################################################
 
+    //進むボタンで入力フォームやYes/Noボタンが出たり消える
+    /*
     $(".btn_attach_forward").on("click", function () {
         if (!$(".btn_attach_forward").hasClass("is-disabled")) {
             if ($(".plaza").hasClass("form2-off")) {
@@ -287,6 +355,7 @@ $(function () {
             }
         }
     });
+    */
 
 	/*
 	//image_pathの使い方

@@ -1,11 +1,12 @@
 <%= javascript_include_tag "plaza.js" %>
 <%= javascript_tag do %>
+    var current_user = <%= raw current_user.to_json %>;
     var routines = <%= raw @routines_selected.to_json %>;
-    var categories = <%= raw @categories_selected.to_json %>
+    var categories = <%= raw @categories_selected.to_json %>;
     var avators = <%= raw @avators_selected.to_json %>;
 <% end %>
 <div class="swiper-container">
-    <div class="swiper-wrapper plaza form1-off form2-off">
+    <div class="swiper-wrapper plaza answer-off">
         <!-- 左ページ -->
         <div class="swiper-slide plaza_container1">
             <div class="char_container1">
@@ -69,8 +70,47 @@
     <button type="button" class="nes-btn btn_history_start">始める</button>
 </div>
 <!-- 入力フォーム & Yes/Noボタン & 履歴/次へボタン -->
-<div class="nes-field answer">
-	<input type="text" id="name_field" class="nes-input answer_text" placeholder="ここに解答を入力してね">
+<div class="nes-container is-rounded form">
+    <div class="nes-field answer_text_container">
+	    <input type="text" id="name_field" class="nes-input answer_text" placeholder="生活指標を単語で入力してね">
+    </div>
+    <div class="answer_frequency_container">
+        <div class="nes-select answer_frequency1">
+            <select class="answer_frequency_period">
+                <option value="" disabled selected hidden>頻度</option>
+                <option value="0">日</option>
+                <option value="1">週</option>
+                <option value="2">月</option>
+            </select>
+        </div>
+        <p>に</p>
+        <div class="nes-select answer_frequency2">
+            <select class="answer_frequency_count">
+                <option value="" disabled selected hidden>回数</option>
+            </select>
+        </div>
+        <p>回</p>
+    </div>
+    <div class="answer_category_container">
+        <label class="answer_category_health">
+            <input type="checkbox" class="nes-checkbox" />
+            <span>身体</span>
+        </label>
+        <label class="answer_category_mind">
+            <input type="checkbox" class="nes-checkbox" />
+            <span>感覚</span>
+        </label>
+        <label class="answer_category_sociality">
+            <input type="checkbox" class="nes-checkbox" />
+            <span>対人関係</span>
+        </label>
+        <label class="answer_category_expression">
+            <input type="checkbox" class="nes-checkbox" />
+            <span>学び/精神</span>
+        </label>
+    </div>
+    <button type="button" class="nes-btn btn_submit">決定</button>
+    <button type="button" class="nes-btn btn_cancel">キャンセル</button>
 </div>
 <button type="button" class="nes-btn btn_yes">はい</button>
 <button type="button" class="nes-btn btn_no">いいえ</button>
