@@ -71,7 +71,9 @@ $(function () {
         //######################################
         $(".btn_next").on("click", function () {
             if (i < data.length) {
+                //テンプレート会話実行
                 $(".btn_next").prop("disabled", true);
+                //画面が遷移した時、前画面で動いていたキャラ画像を静止画に書き換える
                 if (data[i].who != data[i - 1].who) {
                     if (data[i - 1].who < 0) {
                         $(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.png"));
@@ -83,6 +85,7 @@ $(function () {
                         $(".char_right").attr("src", image_path(imgs_right[0]));
                     }
                 }
+                //画面を遷移させてしゃべっているキャラを明確にする+しゃべらせる
                 if (data[i].who < 0 || data[i].who == 1) {
                     swiper.slideTo(1);
                     if (data[i].who < 0) {
@@ -103,20 +106,30 @@ $(function () {
                 }
                 display_talk(data[i++], current_user.name, routines, category_list, avators);
             } else if (i == data.length) {
+                //テンプレート会話終了後
+                $(".btn_next").prop("disabled", true);
                 $(".btn_next").fadeOut(1000, function () {
                     $(".btn_next").text("記録画面");
-                    $(".btn_next").fadeIn(1000);
+                    $(".btn_next").fadeIn(1000, function () {
+                        $(".btn_next").prop("disabled", false);
+                    });
                 });
                 $(".talk").fadeOut(1000, function () {
                     $(".talk_who").text("");
                     $(".talk_text").html("");
                     $(".talker").attr("src", image_path("imgs/other/white.png"));
                     $(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.png"));
-                    $(".btn_attach_back").removeClass("is-disabled");
-                    $(".btn_attach_forward").removeClass("is-disabled");
+                    //$(".btn_attach_back").removeClass("is-disabled");
+                    //$(".btn_attach_forward").removeClass("is-disabled");
                     $(".talk").css({ "opacity": 1 });
                     $(".talk").css("visibility", "hidden");
                     $(".talk").css("display", "block");
+                    $(".life_index_container1").css("visibility", "visible");
+                    $(".life_index_container1").hide().fadeIn(1000);
+                    $(".life_index_container2").css("visibility", "visible");
+                    $(".life_index_container2").hide().fadeIn(1000);
+                    $(".life_index_container3").css("visibility", "visible");
+                    $(".life_index_container3").hide().fadeIn(1000);
                     swiper.allowTouchMove = true;
                 });
                 i += 1
@@ -128,7 +141,7 @@ $(function () {
         });
 
     });
-
+    //履歴画面を開く、閉じる
     $(".btn_history").on("click", function () {
         $(".talk_history").css("visibility", "visible");
     });
@@ -141,7 +154,8 @@ $(function () {
     //######################################
     $(".answer_frequency_period").change(function () {
         for (var i = 0; i < 100; i++) {
-            $(".answer_frequency_count").append('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+            $(".answer_frequency_count").append('<option value="' + (i + 1) + '">' +
+                (i + 1) + '</option>');
         }
     })
 
@@ -169,7 +183,6 @@ $(function () {
             });
         } else if ($(".plaza").hasClass("answer-on")) {
             $(".plaza").removeClass("answer-on");
-            $(".plaza").addClass("answer-off");
             $(".btn_yes").prop("disabled", true);
             $(".btn_no").prop("disabled", true);
             $(".btn_next").prop("disabled", true);
@@ -177,6 +190,7 @@ $(function () {
             $(".btn_no").fadeOut(1000, function () {
                 data_yes = { "who": -1, "talk": "そっか、残念...。<br>次に期待だね。" };
                 display_talk(data_yes, current_user.name, routines, category_list, avators);
+                $(".plaza").addClass("answer-off");
                 $(".btn_next").fadeIn(1000, function () {
                     $(".btn_next").prop("disabled", false);
                     $(".btn_yes").prop("disabled", false);
@@ -231,14 +245,24 @@ $(function () {
     $(".btn_submit").on("click", function () {
         if ($(".plaza").hasClass("answer-on")) {
             $(".btn_submit").prop("disabled", true);
+            $(".btn_cancel").prop("disabled", true);
             var check_text = $(".answer_text").val();
             var check_period = $(".answer_frequency_period option:selected").val();
             var check_count = $(".answer_frequency_count option:selected").val();
-            var answer_period = $(".answer_frequency_period option:selected").text();
-            var answer_count = $(".answer_frequency_count option:selected").text();
             var check_category = [];
+            var check_categories = ["health", "mind", "sociality", "expression"];
+            var answer_period = $(".answer_frequency_period option:selected").text();
+            //var answer_count = $(".answer_frequency_count option:selected").text(); == val()
             var answer_categories = [];
             var answer_category = "";
+            for (var i = 0; i < check_categories.length; i++) {
+                var category_class = ".checkbox_" + check_categories[i];
+                check_category.push($(category_class).prop("checked"));
+                if ($(category_class).prop("checked")) {
+                    answer_categories.push($(category_class).val());
+                }
+            }
+            /*
             check_category.push($(".checkbox_health").prop("checked"));
             if ($(".checkbox_health").prop("checked")) {
                 answer_categories.push($(".checkbox_health").val());
@@ -255,45 +279,66 @@ $(function () {
             if ($(".checkbox_expression").prop("checked")) {
                 answer_categories.push($(".checkbox_expression").val());
             }
+            */
             //入力フォームが全部入力されていた時
-            if (check_text != "" && check_period != 0 && check_count != 0 && check_category.indexOf(true) != -1) {
-                //TODO:if(安田のオントロジーモジュールで入力内容が正しいか判定したいな)
-                //FIXME: 入力が全部されていてもroutine.textがwikidata上で妥当かを判断
-                $(".plaza").removeClass("answer-on");
-                $(".answer_text_container").fadeOut(1000);
-                $(".answer_frequency_container").fadeOut(1000);
-                $(".answer_category_container").fadeOut(1000, function () {
-                    data_submit = { "who": -1, "talk": "これでいいかな？" };
-                    display_talk(data_submit, current_user.name, routines, category_list, avators);
-                    $(".answer_routine").append("<p>生活指標：" + check_text + "</p>");
-                    $(".answer_routine").append("<p>頻度：" + answer_period + ", 回数：" + answer_count + "</p>");
-                    for (var i = 0; i < answer_categories.length; i++) {
-                        if (i < answer_categories.length - 1) {
-                            answer_category = answer_category + answer_categories[i] + ", ";
-                        } else if (i == answer_categories.length - 1) {
-                            answer_category = answer_category + answer_categories[i];
-                        }
-                        if (i == 1) {
-                            answer_category = answer_category + "<br>　　　";
-                        }
+            if (check_text != "" && check_period != 0 &&
+                check_count != 0 && check_category.indexOf(true) != -1) {
+                var check_text_routines = true;
+                for (var i = 0; i < current_user_routines.length; i++) {
+                    if (check_text == current_user_routines[i].text) {
+                        check_text_routines = false;
                     }
-                    $(".answer_routine").append("<p>分類：" + answer_category + "</p>");
-                    $(".answer_routine").fadeIn(1000, function () {
-                        $(".plaza").addClass("answer-check");
-                        $(".btn_submit").prop("disabled", false);
+                }
+                //すでに入力した生活指標を持っているかどうか
+                //FIXME: 文字や言語の種類が違うだけで同じ内容の指標がデータベースに登録されてしまう...
+                if (check_text_routines) {
+                    //TODO:if(安田のオントロジーモジュールで入力内容が正しいか判定したいな)
+                    //FIXME: 入力が全部されていてもroutine.textがwikidata上で妥当かを判断
+                    $(".plaza").removeClass("answer-on");
+                    $(".answer_text_container").fadeOut(1000);
+                    $(".answer_frequency_container").fadeOut(1000);
+                    $(".answer_category_container").fadeOut(1000, function () {
+                        data_submit = { "who": -1, "talk": "これでいいかな？" };
+                        display_talk(data_submit, current_user.name, routines, category_list, avators);
+                        $(".answer_routine").append("<p>生活指標：" + check_text + "</p>");
+                        $(".answer_routine").append("<p>頻度：" + answer_period +
+                            ", 回数：" + check_count + "</p>");
+                        for (var i = 0; i < answer_categories.length; i++) {
+                            if (i < answer_categories.length - 1) {
+                                answer_category = answer_category + answer_categories[i] + ", ";
+                            } else if (i == answer_categories.length - 1) {
+                                answer_category = answer_category + answer_categories[i];
+                            }
+                            if (i == 1) {
+                                answer_category = answer_category + "<br>　　　";
+                            }
+                        }
+                        $(".answer_routine").append("<p>分類：" + answer_category + "</p>");
+                        $(".answer_routine").fadeIn(1000, function () {
+                            $(".plaza").addClass("answer-check");
+                            $(".btn_submit").prop("disabled", false);
+                            $(".btn_cancel").prop("disabled", false);
+                        });
                     });
-                });
+                } else {
+                    data_submit = { "who": -1, "talk": "その生活指標は<br>もう持っているらしいよ。" };
+                    display_talk(data_submit, current_user.name, routines, category_list, avators);
+                    $(".btn_submit").prop("disabled", false);
+                    $(".btn_cancel").prop("disabled", false);
+                }
             } else {
                 data_submit = { "who": -1, "talk": "入力されてない項目があるよ。" };
                 display_talk(data_submit, current_user.name, routines, category_list, avators);
                 $(".btn_submit").prop("disabled", false);
+                $(".btn_cancel").prop("disabled", false);
             }
+
         }
         if ($(".plaza").hasClass("answer-check")) {
             $(".btn_submit").prop("disabled", true);
             $(".btn_cancel").prop("disabled", true);
             //指標と
-            var routine_text = $(".answer_text").val();
+            var answer_text = $(".answer_text").val();
             var answer_period = $(".answer_frequency_period option:selected").val();
             if (answer_period == 1) {
                 answer_period = 1;
@@ -314,7 +359,7 @@ $(function () {
                 url: '/plaza/routines',
                 type: 'POST',
                 data: {
-                    "routine_text": routine_text,
+                    "routine_text": answer_text,
                     "routine_period": answer_period,
                     "routine_count": answer_count,
                     "categories": answer_category
@@ -333,9 +378,11 @@ $(function () {
                         $(".checkbox_sociality").prop("checked", false);
                         $(".checkbox_expression").prop("checked", false);
                         display_talk(data, current_user.name, routines, category_list, avators)
+                        $(".btn_next").prop("disabled", true);
+                        $(".btn_next").fadeIn(1000, function () {
+                            $(".btn_next").prop("disabled", false);
+                        });
                     });
-                    $(".btn_next").fadeIn(1000);
-                    //$(".talk_text").html(data["user_name"] + "さん" + data["text"] + "を登録しました");
                 })
                 // Ajaxリクエストが失敗した時発動
                 .fail((data) => {
@@ -368,17 +415,19 @@ $(function () {
             });
         }
         if ($(".plaza").hasClass("answer-check")) {
-            $(".btn_submit").prop("disabled", true);
             $(".plaza").removeClass("answer-check");
-            $(".plaza").addClass("answer-on");
+            $(".btn_submit").prop("disabled", true);
+            $(".btn_cancel").prop("disabled", true);
             $(".answer_routine").fadeOut(1000, function () {
                 data_submit = { "who": -1, "talk": "どんな指標を見つけたのか<br>教えてくれないかな。" };
                 display_talk(data_submit, current_user.name, routines, category_list, avators);
+                $(".plaza").addClass("answer-on");
                 $(".answer_routine").html("");
                 $(".answer_text_container").fadeIn(1000);
                 $(".answer_frequency_container").fadeIn(1000);
                 $(".answer_category_container").fadeIn(1000);
                 $(".btn_submit").prop("disabled", false);
+                $(".btn_cancel").prop("disabled", false);
             });
         }
     });
@@ -413,6 +462,7 @@ $(function () {
             $(".talk_who").text(avators[2].name);
         }
         $(".talk_history_list").append("<p" + talking + "</p>");
+        //talkingから会話以外の無駄な内容（class定義）を消す
         if (talking.indexOf(" class=\"talk_history_back\">") != -1) {
             talking = talking.replace(" class=\"talk_history_back\">", "");
         } else if (talking.indexOf(">") != -1) {
@@ -432,6 +482,7 @@ $(function () {
         for (var i = 0; i <= $(".talk_text").children().size(); i++) {
             $(".talk_text").children("span:eq(" + i + ")").delay(35 * i).animate({ "opacity": 1 }, 50);
         };
+        //ユーザの応答へと遷移
         if (data.who == -2) {
             //nextボタンを消して、Yes/Noボタンで返答を行うように誘導
             $(".btn_yes").prop("disabled", true);
@@ -516,99 +567,4 @@ $(function () {
         }
     }
 
-
-    //#############################################################################
-    //テスト（お遊び） ############################################################
-    //#############################################################################
-
-    //進むボタンで入力フォームやYes/Noボタンが出たり消える
-    /*
-    $(".btn_attach_forward").on("click", function () {
-        if (!$(".btn_attach_forward").hasClass("is-disabled")) {
-            if ($(".plaza").hasClass("form2-off")) {
-                $(".plaza").removeClass("form2-off");
-                $(".plaza").addClass("form2-on");
-                $(".answer").css("visibility", "visible");
-                $(".btn_yes").css("visibility", "visible");
-                $(".btn_no").css("visibility", "visible");
-                $(".talk").css("visibility", "visible");
-
-                $(".btn_history").addClass("forward_on");
-                if (!$(".btn_history").hasClass("back_on")) {
-                    $(".btn_history").css("visibility", "hidden");
-                }
-
-            } else {
-                $(".plaza").removeClass("form2-on");
-                $(".plaza").addClass("form2-off");
-                $(".answer").css("visibility", "hidden");
-                $(".btn_yes").css("visibility", "hidden");
-                $(".btn_no").css("visibility", "hidden");
-                $(".talk").css("visibility", "hidden");
-
-                $(".btn_history").removeClass("forward_on");
-                if (!$(".btn_history").hasClass("back_on")) {
-                    $(".btn_history").css("visibility", "visible");
-                }
-
-            }
-        }
-    });
-    */
-
-	/*
-	//image_pathの使い方
-	$(".test").attr("src", image_path("imgs/bear/bear1.png"));
-
-	//getJSONの使い方 (public/hoge.json)
-	$.getJSON('/test.json', function (data) {
-		alert(data[0].test_name);
-	});
-	*/
-
-    //テストボタンクリックで戻る進むボタンのON/OFF切り替え
-	/*
-	$(".test_btn").on("click", function () {
-		if ($(".test_btn").hasClass("attach_prog_off")) {
-			$(".test_btn").removeClass("attach_prog_off");
-			$(".test_btn").addClass("attach_prog_on");
-			$(".btn_attach_forward").removeClass("is-disabled");
-		} else {
-			$(".test_btn").removeClass("attach_prog_on");
-			$(".test_btn").addClass("attach_prog_off");
-			$(".attach_prog").val(0);
-			$(".btn_attach_back").addClass("is-disabled");
-			$(".btn_attach_forward").addClass("is-disabled");
-		}
-	});
-	*/
-    //戻る・進むボタンで進行度が変化
-	/*
-	$(".btn_attach_back").on("click", function () {
-		if ($(".btn_attach_back").hasClass("is-disabled") == false) {
-			if ($(".attach_prog").val() > 0) {
-				if ($(".attach_prog").val() == 100) {
-					$(".btn_attach_forward").removeClass("is-disabled");
-				}
-				$(".attach_prog").val($(".attach_prog").val() - 10);
-				if ($(".attach_prog").val() == 0) {
-					$(".btn_attach_back").addClass("is-disabled");
-				}
-			}
-		}
-	});
-	$(".btn_attach_forward").on("click", function () {
-		if ($(".btn_attach_forward").hasClass("is-disabled") == false) {
-			if ($(".attach_prog").val() < $(".attach_prog").attr("max")) {
-				if ($(".attach_prog").val() == 0) {
-					$(".btn_attach_back").removeClass("is-disabled");
-				}
-				$(".attach_prog").val($(".attach_prog").val() + 10);
-				if ($(".attach_prog").val() == 100) {
-					$(".btn_attach_forward").addClass("is-disabled");
-				}
-			}
-		}
-	});
-	*/
 });

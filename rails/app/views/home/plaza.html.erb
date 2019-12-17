@@ -1,6 +1,7 @@
 <%= javascript_include_tag "plaza.js" %>
 <%= javascript_tag do %>
     var current_user = <%= raw current_user.to_json %>;
+    var current_user_routines = <%= raw current_user.routines.to_json %>;
     var routines = <%= raw @routines_selected.to_json %>;
     var categories = <%= raw @categories_selected.to_json %>;
     var avators = <%= raw @avators_selected.to_json %>;
