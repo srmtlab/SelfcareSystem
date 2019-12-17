@@ -47,27 +47,35 @@ class HomeController < ApplicationController
     end
 
     def routines
+        i_category = 0
+        category_box = []
+        for category in params[:categories] do
+            if category == "true" then
+                category_box.push(Category.all[i_category])
+            end
+            i_category += 1
+        end
         routine = Routine.new(
             user_id: current_user.id,
-            text: params['text']
-            )
+            text: params[:routine_text],
+            period: params[:routine_period],
+            count: params[:routine_count],
+            categories: category_box
+        )
+        if routine.save then
+            render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
+        end
 
         
-        # TODO: 参考
+        # 参考
         # routine = Routine.find(user_id: current_user, text: "味噌汁")
         # routine.text = "aaaaa"
         # routine.save
-
-        routine.importance = 2
-
-        if routine.save
-            # もし保存が成功したならば
-            render :json => {text: routine.text, user_name: current_user.name} 
-        end
     end
 
     def routine_params
-        # TODO: strong paramsを参考にして書き換えたりとかする
+        # TODO strong paramsを参考にして書き換えたりとかする
+        # 神谷先輩が書いた　何のためにあるのか分からない...
     end
 end
 # routine_num = Routine.count

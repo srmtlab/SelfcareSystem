@@ -260,7 +260,6 @@ $(function () {
                 //TODO:if(安田のオントロジーモジュールで入力内容が正しいか判定したいな)
                 //FIXME: 入力が全部されていてもroutine.textがwikidata上で妥当かを判断
                 $(".plaza").removeClass("answer-on");
-                $(".plaza").addClass("answer-check");
                 $(".answer_text_container").fadeOut(1000);
                 $(".answer_frequency_container").fadeOut(1000);
                 $(".answer_category_container").fadeOut(1000, function () {
@@ -280,6 +279,7 @@ $(function () {
                     }
                     $(".answer_routine").append("<p>分類：" + answer_category + "</p>");
                     $(".answer_routine").fadeIn(1000, function () {
+                        $(".plaza").addClass("answer-check");
                         $(".btn_submit").prop("disabled", false);
                     });
                 });
@@ -290,30 +290,61 @@ $(function () {
             }
         }
         if ($(".plaza").hasClass("answer-check")) {
+            $(".btn_submit").prop("disabled", true);
+            $(".btn_cancel").prop("disabled", true);
+            //指標と
+            var routine_text = $(".answer_text").val();
+            var answer_period = $(".answer_frequency_period option:selected").val();
+            if (answer_period == 1) {
+                answer_period = 1;
+            } else if (answer_period == 2) {
+                answer_period = 7;
+            } else if (answer_period == 3) {
+                answer_period = 30;
+            }
+            var answer_count = $(".answer_frequency_count option:selected").val();
+            var answer_category = [];
+            answer_category.push($(".checkbox_health").prop("checked"));
+            answer_category.push($(".checkbox_mind").prop("checked"));
+            answer_category.push($(".checkbox_sociality").prop("checked"));
+            answer_category.push($(".checkbox_expression").prop("checked"));
+
             //入力指標の最終確認をした後に決定ボタン
-            //TODO: データ送信機能の実装
-            /*
             $.ajax({
                 url: '/plaza/routines',
                 type: 'POST',
                 data: {
-                    "answer": $("#name_field").val()
+                    "routine_text": routine_text,
+                    "routine_period": answer_period,
+                    "routine_count": answer_count,
+                    "categories": answer_category
                 }
             })
                 // Ajaxリクエストが成功した時発動
                 .done((data) => {
-
+                    $(".form").fadeOut(1000, function () {
+                        $(".btn_submit").prop("disabled", false);
+                        $(".btn_cancel").prop("disabled", false);
+                        $(".answer_text").val("");
+                        $(".answer_frequency_period option[value='0']").prop('selected', true);
+                        $(".answer_frequency_count option[value='0']").prop('selected', true);
+                        $(".checkbox_health").prop("checked", false);
+                        $(".checkbox_mind").prop("checked", false);
+                        $(".checkbox_sociality").prop("checked", false);
+                        $(".checkbox_expression").prop("checked", false);
+                        display_talk(data, current_user.name, routines, category_list, avators)
+                    });
+                    $(".btn_next").fadeIn(1000);
                     //$(".talk_text").html(data["user_name"] + "さん" + data["text"] + "を登録しました");
                 })
                 // Ajaxリクエストが失敗した時発動
                 .fail((data) => {
-
+                    console.log("データ送信、受信に失敗");
                 })
                 // Ajaxリクエストが成功・失敗どちらでも発動
                 .always((data) => {
 
                 });
-                */
         }
     });
 
