@@ -41,7 +41,7 @@
     },
     {
         "who": 2,
-        "talk": "ぼくはlife_index,"
+        "talk": "ぼくは<br>life_index,"
     },
     {
         "who": 2,
@@ -53,7 +53,7 @@
     },
     {
         "who": 0,
-        "talk": "えーと、ぼくはlife_index,"
+        "talk": "えーと、ぼくは<br>life_index,"
     },
     {
         "who": 0,
@@ -61,7 +61,7 @@
     },
     {
         "who": 1,
-        "talk": "ぼくはlife_index,"
+        "talk": "ぼくは<br>life_index,"
     },
     {
         "who": 1,
