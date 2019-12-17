@@ -77,40 +77,41 @@
     <div class="answer_frequency_container">
         <div class="nes-select answer_frequency1">
             <select class="answer_frequency_period">
-                <option value="" disabled selected hidden>頻度</option>
-                <option value="0">日</option>
-                <option value="1">週</option>
-                <option value="2">月</option>
+                <option value="0" disabled selected hidden>頻度</option>
+                <option value="1">日</option>
+                <option value="2">週</option>
+                <option value="3">月</option>
             </select>
         </div>
         <p>に</p>
         <div class="nes-select answer_frequency2">
             <select class="answer_frequency_count">
-                <option value="" disabled selected hidden>回数</option>
+                <option value="0" disabled selected hidden>回数</option>
             </select>
         </div>
         <p>回</p>
     </div>
     <div class="answer_category_container">
         <label class="answer_category_health">
-            <input type="checkbox" class="nes-checkbox" />
+            <input type="checkbox" class="nes-checkbox checkbox_health" value="身体"/>
             <span>身体</span>
         </label>
         <label class="answer_category_mind">
-            <input type="checkbox" class="nes-checkbox" />
+            <input type="checkbox" class="nes-checkbox checkbox_mind" value="感覚"/>
             <span>感覚</span>
         </label>
         <label class="answer_category_sociality">
-            <input type="checkbox" class="nes-checkbox" />
+            <input type="checkbox" class="nes-checkbox checkbox_sociality" value="対人関係"/>
             <span>対人関係</span>
         </label>
         <label class="answer_category_expression">
-            <input type="checkbox" class="nes-checkbox" />
+            <input type="checkbox" class="nes-checkbox checkbox_expression" value="学び/精神"/>
             <span>学び/精神</span>
         </label>
     </div>
     <button type="button" class="nes-btn btn_submit">決定</button>
     <button type="button" class="nes-btn btn_cancel">キャンセル</button>
+    <div class="answer_routine"></div>
 </div>
 <button type="button" class="nes-btn btn_yes">はい</button>
 <button type="button" class="nes-btn btn_no">いいえ</button>

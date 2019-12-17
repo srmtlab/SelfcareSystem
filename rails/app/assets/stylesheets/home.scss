@@ -471,6 +471,17 @@ body {
         width: 120px;
         z-index: 16;
       }
+      .answer_routine {
+        position: absolute;
+        top: 10px;
+        left: 30px;
+        z-index: 17;
+        display: none;
+
+        p {
+          margin: 25px auto;
+        }
+      }
     }
     /* ########################################################## */
     /* Yes/No, history/nextボタン */

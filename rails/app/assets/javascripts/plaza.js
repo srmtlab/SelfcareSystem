@@ -45,7 +45,7 @@ $(function () {
     //######################################
     //広場画面案内
     //######################################
-    // FIXME: URLを変更する
+    // FIXME: URLを変更する（神谷先輩曰く、template_talking.jsonを使うのはあまりよくない？）
     $.getJSON("/template_talking.json", function (data) {
         //導入
         $(".btn_history_start").on("click", function () {
@@ -137,13 +137,162 @@ $(function () {
     });
 
     //######################################
+    //入力フォームで指標頻度が決まったときに指標回数をselectに追加する
+    //######################################
+    $(".answer_frequency_period").change(function () {
+        for (var i = 0; i < 100; i++) {
+            $(".answer_frequency_count").append('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+        }
+    })
+
+    //######################################
     //Yes/Noボタンで指標入力管理
     //######################################
-    //TODO:
     $(".btn_yes").on("click", function () {
         if ($(".plaza").hasClass("answer-off")) {
-
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_yes").fadeOut(1000);
+            $(".btn_no").fadeOut(1000, function () {
+                data_yes = { "who": -1, "talk": "それじゃあどんな指標を<br>見つけたのか教えてくれないかな。" };
+                display_talk(data_yes, current_user.name, routines, category_list, avators);
+                $(".btn_yes").prop("disabled", false);
+                $(".btn_no").prop("disabled", false);
+                $(".btn_submit").prop("disabled", true);
+                $(".btn_cancel").prop("disabled", true);
+                $(".form").fadeIn(1000, function () {
+                    $(".plaza").removeClass("answer-off");
+                    $(".plaza").addClass("answer-on");
+                    $(".btn_submit").prop("disabled", false);
+                    $(".btn_cancel").prop("disabled", false);
+                });
+            });
         } else if ($(".plaza").hasClass("answer-on")) {
+            $(".plaza").removeClass("answer-on");
+            $(".plaza").addClass("answer-off");
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_next").prop("disabled", true);
+            $(".btn_yes").fadeOut(1000);
+            $(".btn_no").fadeOut(1000, function () {
+                data_yes = { "who": -1, "talk": "そっか、残念...。<br>次に期待だね。" };
+                display_talk(data_yes, current_user.name, routines, category_list, avators);
+                $(".btn_next").fadeIn(1000, function () {
+                    $(".btn_next").prop("disabled", false);
+                    $(".btn_yes").prop("disabled", false);
+                    $(".btn_no").prop("disabled", false);
+                });
+            });
+            //formの入力内容を消去する
+            $(".answer_text").val("");
+            $(".answer_frequency_period option[value='0']").prop('selected', true);
+            $(".answer_frequency_count option[value='0']").prop('selected', true);
+            $(".checkbox_health").prop("checked", false);
+            $(".checkbox_mind").prop("checked", false);
+            $(".checkbox_sociality").prop("checked", false);
+            $(".checkbox_expression").prop("checked", false);
+        }
+    });
+
+    $(".btn_no").on("click", function () {
+        if ($(".plaza").hasClass("answer-off")) {
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_yes").fadeOut(1000);
+            $(".btn_no").fadeOut(1000, function () {
+                data_no = { "who": -1, "talk": "そっか、残念...。<br>次に期待だね。" };
+                display_talk(data_no, current_user.name, routines, category_list, avators);
+                $(".btn_next").fadeIn(1000, function () {
+                    $(".btn_next").prop("disabled", false);
+                });
+                $(".btn_yes").prop("disabled", false);
+                $(".btn_no").prop("disabled", false);
+            });
+        }
+        if ($(".plaza").hasClass("answer-on")) {
+            $(".btn_yes").prop("disabled", true);
+            $(".btn_no").prop("disabled", true);
+            $(".btn_submit").prop("disabled", true);
+            $(".btn_cancel").prop("disabled", true);
+            $(".btn_yes").fadeOut(1000);
+            $(".btn_no").fadeOut(1000, function () {
+                data_no = { "who": -1, "talk": "どんな指標を見つけたのか<br>教えてくれないかな。" };
+                display_talk(data_no, current_user.name, routines, category_list, avators);
+                $(".form").fadeIn(1000, function () {
+                    $(".btn_yes").prop("disabled", false);
+                    $(".btn_no").prop("disabled", false);
+                    $(".btn_submit").prop("disabled", false);
+                    $(".btn_cancel").prop("disabled", false);
+                });
+            });
+        }
+    });
+
+    $(".btn_submit").on("click", function () {
+        if ($(".plaza").hasClass("answer-on")) {
+            $(".btn_submit").prop("disabled", true);
+            var check_text = $(".answer_text").val();
+            var check_period = $(".answer_frequency_period option:selected").val();
+            var check_count = $(".answer_frequency_count option:selected").val();
+            var answer_period = $(".answer_frequency_period option:selected").text();
+            var answer_count = $(".answer_frequency_count option:selected").text();
+            var check_category = [];
+            var answer_categories = [];
+            var answer_category = "";
+            check_category.push($(".checkbox_health").prop("checked"));
+            if ($(".checkbox_health").prop("checked")) {
+                answer_categories.push($(".checkbox_health").val());
+            }
+            check_category.push($(".checkbox_mind").prop("checked"));
+            if ($(".checkbox_mind").prop("checked")) {
+                answer_categories.push($(".checkbox_mind").val());
+            }
+            check_category.push($(".checkbox_sociality").prop("checked"));
+            if ($(".checkbox_sociality").prop("checked")) {
+                answer_categories.push($(".checkbox_sociality").val());
+            }
+            check_category.push($(".checkbox_expression").prop("checked"));
+            if ($(".checkbox_expression").prop("checked")) {
+                answer_categories.push($(".checkbox_expression").val());
+            }
+            //入力フォームが全部入力されていた時
+            if (check_text != "" && check_period != 0 && check_count != 0 && check_category.indexOf(true) != -1) {
+                //TODO:if(安田のオントロジーモジュールで入力内容が正しいか判定したいな)
+                //FIXME: 入力が全部されていてもroutine.textがwikidata上で妥当かを判断
+                $(".plaza").removeClass("answer-on");
+                $(".plaza").addClass("answer-check");
+                $(".answer_text_container").fadeOut(1000);
+                $(".answer_frequency_container").fadeOut(1000);
+                $(".answer_category_container").fadeOut(1000, function () {
+                    data_submit = { "who": -1, "talk": "これでいいかな？" };
+                    display_talk(data_submit, current_user.name, routines, category_list, avators);
+                    $(".answer_routine").append("<p>生活指標：" + check_text + "</p>");
+                    $(".answer_routine").append("<p>頻度：" + answer_period + ", 回数：" + answer_count + "</p>");
+                    for (var i = 0; i < answer_categories.length; i++) {
+                        if (i < answer_categories.length - 1) {
+                            answer_category = answer_category + answer_categories[i] + ", ";
+                        } else if (i == answer_categories.length - 1) {
+                            answer_category = answer_category + answer_categories[i];
+                        }
+                        if (i == 1) {
+                            answer_category = answer_category + "<br>　　　";
+                        }
+                    }
+                    $(".answer_routine").append("<p>分類：" + answer_category + "</p>");
+                    $(".answer_routine").fadeIn(1000, function () {
+                        $(".btn_submit").prop("disabled", false);
+                    });
+                });
+            } else {
+                data_submit = { "who": -1, "talk": "入力されてない項目があるよ。" };
+                display_talk(data_submit, current_user.name, routines, category_list, avators);
+                $(".btn_submit").prop("disabled", false);
+            }
+        }
+        if ($(".plaza").hasClass("answer-check")) {
+            //入力指標の最終確認をした後に決定ボタン
+            //TODO: データ送信機能の実装
+            /*
             $.ajax({
                 url: '/plaza/routines',
                 type: 'POST',
@@ -164,23 +313,42 @@ $(function () {
                 .always((data) => {
 
                 });
+                */
         }
     });
 
-    $(".btn_no").on("click", function () {
-        if ($(".plaza").hasClass("answer-off")) {
+    $(".btn_cancel").on("click", function () {
+        if ($(".plaza").hasClass("answer-on")) {
+            //指標入力フォームでキャンセルボタン
             $(".btn_yes").prop("disabled", true);
             $(".btn_no").prop("disabled", true);
-            $(".btn_yes").fadeOut(1000);
-            $(".btn_no").fadeOut(1000, function () {
-                data_no = { "who": -1, "talk": "そっか、残念...。<br>まだ今度見つかるといいね。" };
-                display_talk(data_no, current_user.name, routines, category_list, avators);
-                $(".btn_next").fadeIn(1000, function () {
-                    $(".btn_next").prop("disabled", false);
+            $(".btn_submit").prop("disabled", true);
+            $(".btn_cancel").prop("disabled", true);
+            $(".form").fadeOut(1000, function () {
+                data_cancel = { "who": -1, "talk": "生活指標の登録をやめる？" };
+                display_talk(data_cancel, current_user.name, routines, category_list, avators);
+                $(".btn_yes").fadeIn(1000);
+                $(".btn_no").fadeIn(1000, function () {
+                    $(".btn_yes").prop("disabled", false);
+                    $(".btn_no").prop("disabled", false);
+                    $(".btn_submit").prop("disabled", false);
+                    $(".btn_cancel").prop("disabled", false);
                 });
             });
-        } else if ($(".plaza").hasClass("answer-on")) {
-
+        }
+        if ($(".plaza").hasClass("answer-check")) {
+            $(".btn_submit").prop("disabled", true);
+            $(".plaza").removeClass("answer-check");
+            $(".plaza").addClass("answer-on");
+            $(".answer_routine").fadeOut(1000, function () {
+                data_submit = { "who": -1, "talk": "どんな指標を見つけたのか<br>教えてくれないかな。" };
+                display_talk(data_submit, current_user.name, routines, category_list, avators);
+                $(".answer_routine").html("");
+                $(".answer_text_container").fadeIn(1000);
+                $(".answer_frequency_container").fadeIn(1000);
+                $(".answer_category_container").fadeIn(1000);
+                $(".btn_submit").prop("disabled", false);
+            });
         }
     });
 
