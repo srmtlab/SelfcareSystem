@@ -7,6 +7,8 @@ class CreateRoutines < ActiveRecord::Migration[5.2]
       t.integer :count, default: 0
       t.float :importance, default: 0.0
       t.float :confidence, default: 0.0
+      t.string :wd_label, null: false, default: ""
+      ## t.integer(?) :category, default: 0
       t.timestamps
     end
   end
