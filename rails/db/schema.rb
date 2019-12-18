@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2019_12_03_031315) do
 
-  create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "schedule_id"
     t.time "start"
     t.time "end"
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2019_12_03_031315) do
     t.index ["schedule_id"], name: "index_activities_on_schedule_id"
   end
 
-  create_table "avators", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "avators", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", default: "", null: false
     t.string "icon", default: "", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2019_12_03_031315) do
     t.index ["user_id"], name: "index_avators_on_user_id"
   end
 
-  create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "text", default: "", null: false
     t.integer "period", default: 0
@@ -43,14 +43,14 @@ ActiveRecord::Schema.define(version: 2019_12_03_031315) do
     t.index ["user_id"], name: "index_routines_on_user_id"
   end
 
-  create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "schedules", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_schedules_on_user_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
