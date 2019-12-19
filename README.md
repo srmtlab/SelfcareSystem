@@ -60,6 +60,10 @@ bundle exec rails generate migration AddNameToUsers
 # 例 : Userモデルに複数のカラムを追加
 bundle exec rails generate migration AddBasicInfoToUsers
 
+# カラムを削除する
+bundle exec rails g migration Removeカラム名Fromテーブル名
+
+
 
 # migrate（MySQLにマイグレーションファイルの内容を適応する）
 bundle exec rails db:migrate
