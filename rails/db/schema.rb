@@ -31,16 +31,13 @@ ActiveRecord::Schema.define(version: 2019_12_12_080745) do
     t.index ["user_id"], name: "index_avators_on_user_id"
   end
 
-<<<<<<< HEAD
-  create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-=======
-  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "routine_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "routine_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "routine_id"
     t.bigint "category_id"
     t.datetime "created_at", null: false
@@ -50,15 +47,13 @@ ActiveRecord::Schema.define(version: 2019_12_12_080745) do
     t.index ["routine_id"], name: "index_routine_categories_on_routine_id"
   end
 
-  create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
->>>>>>> develop
+  create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id"
     t.string "text", default: "", null: false
     t.integer "period", default: 0
     t.integer "count", default: 0
     t.float "importance", default: 0.0
     t.float "confidence", default: 0.0
-    t.string "wd_label", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_routines_on_user_id"
