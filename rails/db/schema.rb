@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_19_073542) do
+ActiveRecord::Schema.define(version: 2019_12_12_080110) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "schedule_id"
@@ -31,28 +31,10 @@ ActiveRecord::Schema.define(version: 2019_12_19_073542) do
     t.index ["user_id"], name: "index_avators_on_user_id"
   end
 
-  create_table "caches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "label"
-    t.string "wd_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["label"], name: "index_caches_on_label", unique: true
-  end
-
-  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "routine_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "routine_id"
-    t.bigint "category_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_routine_categories_on_category_id"
-    t.index ["routine_id", "category_id"], name: "index_routine_categories_on_routine_id_and_category_id", unique: true
-    t.index ["routine_id"], name: "index_routine_categories_on_routine_id"
   end
 
   create_table "routines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -64,8 +46,6 @@ ActiveRecord::Schema.define(version: 2019_12_19_073542) do
     t.float "confidence", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cache_id"
-    t.index ["cache_id"], name: "index_routines_on_cache_id"
     t.index ["user_id"], name: "index_routines_on_user_id"
   end
 
@@ -94,9 +74,6 @@ ActiveRecord::Schema.define(version: 2019_12_19_073542) do
 
   add_foreign_key "activities", "schedules"
   add_foreign_key "avators", "users"
-  add_foreign_key "routine_categories", "categories"
-  add_foreign_key "routine_categories", "routines"
-  add_foreign_key "routines", "caches", column: "cache_id"
   add_foreign_key "routines", "users"
   add_foreign_key "schedules", "users"
 end
