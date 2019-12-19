@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_12_080745) do
+ActiveRecord::Schema.define(version: 2019_12_19_073542) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "schedule_id"
@@ -29,6 +29,14 @@ ActiveRecord::Schema.define(version: 2019_12_12_080745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_avators_on_user_id"
+  end
+
+  create_table "caches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "label"
+    t.string "wd_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["label"], name: "index_caches_on_label", unique: true
   end
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -54,9 +62,10 @@ ActiveRecord::Schema.define(version: 2019_12_12_080745) do
     t.integer "count", default: 0
     t.float "importance", default: 0.0
     t.float "confidence", default: 0.0
-    t.string "wd_label", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cache_id"
+    t.index ["cache_id"], name: "index_routines_on_cache_id"
     t.index ["user_id"], name: "index_routines_on_user_id"
   end
 
@@ -87,6 +96,7 @@ ActiveRecord::Schema.define(version: 2019_12_12_080745) do
   add_foreign_key "avators", "users"
   add_foreign_key "routine_categories", "categories"
   add_foreign_key "routine_categories", "routines"
+  add_foreign_key "routines", "caches", column: "cache_id"
   add_foreign_key "routines", "users"
   add_foreign_key "schedules", "users"
 end
