@@ -591,7 +591,7 @@ $(function(){
 	}
 	function find_cache(text){
 		$.ajax({
-			url: 'question/register',
+			url: '/question/register',
 			type: 'POST',
 			data: {
 				'text': text
