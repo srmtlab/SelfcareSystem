@@ -51,7 +51,7 @@ $(function(){
 	var index_category=['食事','趣味','睡眠','人付き合い'];
 	var wd_food = "wd:Q2095";
 	var wd_action = "wd:Q4026292"
-	
+	var s = 0;
     
 	//////////////////// 質問に入る前の会話の流れ　/////////////////////////////////////////////////////////
 	botui.message.bot({
@@ -155,37 +155,18 @@ $(function(){
 				}
 			}).then(function(res){
 				food_index_name = res.value;
+				
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
-                });
-				include_word_subclass(res.value,wd_action).success(function(data) {
-					
-						if(data.results.bindings.length>0){
-							botui.message.update(msgIndex,{
-								content: 'そうなんだ!'
-							});
-							botui.message.bot({
-								delay:2000,
-								content: 'たしかに'+res.value+'はおいしいよね！'
-							}).then(select_food_everyday);
-						}
-						else{
-							botui.message.bot({
-								delay:1000,
-								content: 'それについておいらはよく知らないんだ'
-							});
-							botui.message.bot({
-								delay:2000,
-								content: '良かったらそれが何なのか僕に教えてくれないか？'
-							})
-						}
-				})
+				});
+				search_word(res.value,wd_food,success_food_word,failed_food_word);
+				find_cache(res.value)
 			});
 		});
 	}
-
+	
 	///////// 質問２　１で答えた食べ物は毎日食べるかどうかを「はい」or 「いいえ」で選択 //////////////////////////
 	
 	function select_food_everyday(){
@@ -508,48 +489,117 @@ $(function(){
 			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
 		}).then(select_index_category);
 	}
+
+	function success_food_word(){
+		botui.message.update(msgIndex,{
+			content: 'そうなんだ!'
+		}).then(select_food_everyday);
+		
+	}
+	
+	function failed_food_word(){
+		botui.message.bot({
+			delay:1000,
+			content: 'それについておいらはよく知らないんだ'
+		});
+		botui.message.bot({
+			delay:2000,
+			content: '良かったらそれが何なのか僕に教えてくれないか？'
+		})
+	}
+
+	function search_word(word,wd,func1,func2){
+		exist_subclass(word).success(function(data){
+			if(data.results.bindings.length>0){
+				search_subclass(word,wd).success(function(data){
+					if(data.results.bindings.length>0){
+						func1();
+					}
+					else{
+						func2();
+					}
+				})
+			}
+			else{
+				console.log(2);
+			}
+		})
+	}
+	
+	function exist_subclass(word){
+		const query =`
+		PREFIX wd: <http://www.wikidata.org/entity/>
+		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
+		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+		SELECT ?b
+		WHERE{
+		   ?a rdfs:label "`+word+`"@ja;
+			  wdt:P279+ ?b.
+		}`
+		return $.ajax({
+			type: 'GET',
+			url: 'https://query.wikidata.org/sparql',
+			data: {
+				query
+			},
+			dataType: 'json',
+		})
+		
+	}
+	function search_subclass(word,wd){
+		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
+		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
+		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+		SELECT ?b
+		WHERE{ 
+			?a rdfs:label '` + word + `'@ja; 
+				wdt:P279+ ?b. 
+			FILTER(?b =`+ wd + ` ). 
+		} `
+		return $.ajax({
+			type: 'GET',
+			url: 'https://query.wikidata.org/sparql',
+			data: {
+				query
+			},
+			dataType: 'json',
+		})
+	};
+	
+	function include_word_subclass(word,wd){
+		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
+		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
+		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+		SELECT ?b
+		WHERE{ 
+			?a wdt:P279+`+wd+`;
+				  rdfs:label ?b.
+			   FILTER(LANG(?b) = 'ja').
+				FILTER CONTAINS("`+word+`"@ja,?b).
+		} `
+		return $.ajax({
+			type: 'GET',
+			url: 'https://query.wikidata.org/sparql',
+			data: {
+				query
+			},
+			dataType: 'json',
+		})
+	}
+	function find_cache(text){
+		$.ajax({
+			url: 'question/register',
+			type: 'POST',
+			data: {
+				'text': text
+			}
+		})
+			// Ajaxリクエストが成功した時発動
+			.done((data) => {
+				console.log(data['label'])
+			})
+	}
 });
-
-
-function search_subclass(word,wd){
-	const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
-	PREFIX wds: <http://www.wikidata.org/entity/statement/> 
-	PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-    SELECT ?b
-    WHERE{ 
-        ?a rdfs:label '` + word + `'@ja; 
-            wdt:P279+ ?b. 
-        FILTER(?b =`+ wd + ` ). 
-    } `
-	return $.ajax({
-		type: 'GET',
-		url: 'https://query.wikidata.org/sparql',
-		data: {
-			query
-		},
-		dataType: 'json',
-	})
-};
-
-function include_word_subclass(word,wd){
-	const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
-	PREFIX wds: <http://www.wikidata.org/entity/statement/> 
-	PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-    SELECT ?b
-    WHERE{ 
-        ?a wdt:P279+`+wd+`;
-     		 rdfs:label ?b.
-  		 FILTER(LANG(?b) = 'ja').
-   		 FILTER CONTAINS("`+word+`"@ja,?b).
-    } `
-	return $.ajax({
-		type: 'GET',
-		url: 'https://query.wikidata.org/sparql',
-		data: {
-			query
-		},
-		dataType: 'json',
-	})
-}

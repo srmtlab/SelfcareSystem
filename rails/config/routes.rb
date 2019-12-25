@@ -13,5 +13,5 @@ Rails.application.routes.draw do
     :sessions => 'users/sessions'   
   } 
   get '/question', to: 'questions#Question'
-  post 'question/show', to: 'questions#show'
+  post "question/register", to: "home#register"
 end

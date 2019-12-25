@@ -54,7 +54,14 @@ class HomeController < ApplicationController
     def routine_params
         # TODO: strong paramsを参考にして書き換えたりとかする
     end
+
+    def register
+        routine = Cache.find(label: params['text'])
+        render :json => {label: routine.label, wd_type: routine.wd_type}
+    end
 end
+
+
 # routine_num = Routine.count
 # routine_selected = rand(routine_num) + 1
 # @routine1 = Routine.find(routine_selected)
