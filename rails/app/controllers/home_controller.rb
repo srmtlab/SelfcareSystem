@@ -56,8 +56,12 @@ class HomeController < ApplicationController
     end
 
     def register
-        routine = Cache.find(label: params['text'])
-        render :json => {label: routine.label, wd_type: routine.wd_type}
+        routine = Cache.find_by(label: params['text'])
+        if routine
+            render :json => {label: routine.label, wd_type: routine.wd_type}
+        else
+            render :json => {label: "ないよ", wd_type: "知らない"}
+        end
     end
 end
 

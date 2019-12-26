@@ -51,6 +51,7 @@ $(function(){
 	var index_category=['食事','趣味','睡眠','人付き合い'];
 	var wd_food = "wd:Q2095";
 	var wd_action = "wd:Q4026292"
+	var wd_location = "wd:Q2221906"
 	var s = 0;
     
 	//////////////////// 質問に入る前の会話の流れ　/////////////////////////////////////////////////////////
@@ -509,19 +510,34 @@ $(function(){
 	}
 
 	function search_word(word,wd,func1,func2){
-		exist_subclass(word).success(function(data){
-			if(data.results.bindings.length>0){
+		find_cache(word).success(function(data){
+			if(data['label'] == word && data['wd_type'] == wd){
+				func1();
+				console.log(1);
+			}
+			else{
 				search_subclass(word,wd).success(function(data){
 					if(data.results.bindings.length>0){
 						func1();
 					}
 					else{
-						func2();
+						search_instanceclass(word,wd).success(function(data){
+							if(data.results.bindings.length>0){
+								func1();
+							}
+							else{
+								search_include_subclass(word,wd).success(function(data){
+									if(data.results.bindings.length>0){
+										func1();
+									}
+									else{
+										func2();
+									}
+								})
+							}
+						})
 					}
 				})
-			}
-			else{
-				console.log(2);
 			}
 		})
 	}
@@ -547,17 +563,26 @@ $(function(){
 		})
 		
 	}
+
 	function search_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
 		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 		SELECT ?b
-		WHERE{ 
-			?a rdfs:label '` + word + `'@ja; 
-				wdt:P279+ ?b. 
-			FILTER(?b =`+ wd + ` ). 
-		} `
+		WHERE{
+			{
+			 ?a rdfs:label "`+word+`"@ja;
+				wdt:P279+ ?b.
+			 FILTER(?b = `+ wd +`).
+			 }
+			UNION
+			{
+			  ?a skos:altLabel "`+ word + `"@ja;
+				wdt:P279+ ?b.
+			 FILTER(?b = `+ wd + `).
+			}
+		  }`
 		return $.ajax({
 			type: 'GET',
 			url: 'https://query.wikidata.org/sparql',
@@ -568,7 +593,38 @@ $(function(){
 		})
 	};
 	
-	function include_word_subclass(word,wd){
+	function search_instanceclass(word,wd){
+		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
+		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
+		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+		SELECT ?c
+		WHERE{
+			{
+			  ?a rdfs:label "` +word+ `"@ja;
+				wdt:P31+ ?b.
+			 ?b wdt:P279+ ?c.
+			 FILTER(?c =` +wd+ `).
+			}
+			UNION
+			{
+			  ?a skos:altLabel "` +word+ `"@ja;
+				wdt:P31+ ?b.
+			 ?b wdt:P279+ ?c.
+			 FILTER(?c =` +wd+ `).
+			}
+		  }`
+		return $.ajax({
+			type: 'GET',
+			url: 'https://query.wikidata.org/sparql',
+			data: {
+				query
+			},
+			dataType: 'json',
+		})
+	}
+
+	function search_include_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
 		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
@@ -590,16 +646,12 @@ $(function(){
 		})
 	}
 	function find_cache(text){
-		$.ajax({
+		return $.ajax({
 			url: '/question/register',
 			type: 'POST',
 			data: {
 				'text': text
 			}
 		})
-			// Ajaxリクエストが成功した時発動
-			.done((data) => {
-				console.log(data['label'])
-			})
 	}
 });
