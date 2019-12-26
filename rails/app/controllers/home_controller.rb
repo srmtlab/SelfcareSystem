@@ -56,12 +56,20 @@ class HomeController < ApplicationController
     end
 
     def register
-        routine = Cache.find_by(label: params['text'])
+        routine = Cache.select('id, label, wd_type').find_by(label: params['text'])
         if routine
-            render :json => {label: routine.label, wd_type: routine.wd_type}
+            render :json => {id: routine.id, label: routine.label, wd_type: routine.wd_type}
         else
             render :json => {label: "ないよ", wd_type: "知らない"}
         end
+    end
+
+    def addCache
+        cache = Cache.new(
+            label: params['text'],
+            wd_type: params['wd_type']
+            )
+        cache.save
     end
 end
 

@@ -162,7 +162,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_food,success_food_word,failed_food_word);
+				search_word(res.value,wd_food,success_food_word,failed_food_word,add_cache);
 				find_cache(res.value)
 			});
 		});
@@ -408,10 +408,10 @@ $(function(){
 				label : 'text', // dropdown label variable
 				multipleselect : true, // Default: false
 				options : [
-								{value: "体に関すること", text : "体に関すること" },
-								{value: "心に関すること", text : "心に関すること" },
-								{value: "人付き合いに関すること", text : "人付き合いに関すること" },
-								{value: "コミュニケーションに関すること", text : "コミュニケーションに関すること" },
+								{value: "health", text : "身体に関すること" },
+								{value: "mind", text : "心に関すること" },
+								{value: "sociality", text : "人付き合いに関すること" },
+								{value: "communication", text : "コミュニケーションに関すること" },
 						  ],
 				button: {
 				  icon: '',
@@ -425,7 +425,7 @@ $(function(){
 			})
 			botui.message.bot({
 				delay: 3000,
-				content: user_name+'にとっては'+res.value+'に関係しているんだね！'
+				content: user_name+'にとっては'+res.text+'に関係しているんだね！'
 			})
 		 }).then(select_another_food)
 	}
@@ -509,26 +509,28 @@ $(function(){
 		})
 	}
 
-	function search_word(word,wd,func1,func2){
+	function search_word(word,wd,func1,func2,func3){
 		find_cache(word).success(function(data){
 			if(data['label'] == word && data['wd_type'] == wd){
 				func1();
-				console.log(1);
 			}
 			else{
 				search_subclass(word,wd).success(function(data){
 					if(data.results.bindings.length>0){
 						func1();
+						func3(word,wd);
 					}
 					else{
 						search_instanceclass(word,wd).success(function(data){
 							if(data.results.bindings.length>0){
 								func1();
+								func3(word,wd);
 							}
 							else{
 								search_include_subclass(word,wd).success(function(data){
 									if(data.results.bindings.length>0){
 										func1();
+										func3(word,wd);
 									}
 									else{
 										func2();
@@ -651,6 +653,17 @@ $(function(){
 			type: 'POST',
 			data: {
 				'text': text
+			}
+		})
+	}
+
+	function add_cache(text,wd){
+		$.ajax({
+			url: '/question/addCache',
+			type: 'POST',
+			data: {
+				'text': text,
+				'wd_type': wd
 			}
 		})
 	}
