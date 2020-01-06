@@ -40,7 +40,7 @@ $(function(){
 	var char_name = "タロウ";
 	var user_name = "ようた"
 	var question_count = 1;
-
+   
 	var period = 1;
 	var category_box =['false','false','false','false'];
 
@@ -48,6 +48,11 @@ $(function(){
 	var food_index_period;
 	var food_index_count = 1;
 	var food_index_importance = 1;
+
+	var hobby_index_name =" ";
+	var hobby_index_period;
+	var hobby_index_count = 1;
+	var hobby_index_importance = 1;
 	
 	var index_category=['食事','趣味','睡眠','人付き合い'];
 	var wd_food = "wd:Q2095";
@@ -116,18 +121,21 @@ $(function(){
 			}).then(function(res){
 				index_category[res.value] = '';
 				if(res.value==0){
+					question_count=0
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
 					}).then(input_food_question)
 				}
 				if(res.value==1){
+					question_count=0
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
-					}).then()
+					}).then(select_exit_hobby)
 				}
 				if(res.value==2){
+					question_count=0
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
@@ -135,6 +143,7 @@ $(function(){
 
 				}
 				if(res.value==3){
+					question_count=0
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
@@ -142,7 +151,10 @@ $(function(){
 				}
 			})	
 	}
-	////////// 質問１　好きな食べ物を入力する　//////////////////////////////////////////////////////////////////
+
+//////////////////　食事に関する質問　　///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+    ////////// 質問１　好きな食べ物を入力する　//////////////////////////////////////////////////////////////////
 
 	function input_food_question(){
 	
@@ -163,7 +175,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_food,success_food_word,failed_food_word,add_cache);
+				search_word(res.value,wd_food,success_food_word,failed_food_word,add_cache,select_food_everyday);
 			});
 		});
 	}
@@ -321,7 +333,7 @@ $(function(){
 			})
 		})
 	}
-
+    /////////  ルーティンの重要度を決定する
 	function select_food_importance(){
 		
 		botui.message.bot({
@@ -500,15 +512,419 @@ $(function(){
 			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
 		}).then(select_index_category);
 	}
+/////////////　　趣味に関する質問　　///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	function success_food_word(){
+    function select_exit_hobby(){
+		botui.message.bot({
+			delay: 1000,
+			content: user_name+'は何か趣味があったりするかな？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: 'はい',
+					value: true
+				},{
+					text: 'いいえ',
+					value: false
+				}]
+			}).then(function(res){
+				if(res.value==true){
+					input_hobby_question();
+				}	
+				else{
+					input_freetime_question();
+				}
+	    	})
+		})
+	}
+	
+	function input_hobby_question(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'そうなんだ！'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'じゃあその趣味が何か教えてほしいな'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				hobby_index_name = res.value;
+				botui.message.bot({
+					loading: true
+				}).then(function(index){
+					msgIndex = index;
+				});
+				search_word(res.value,wd_action,success_food_word,failed_food_word,add_cache,select_hobby_everyday);
+			});
+		});
+	}
+	
+	function input_freetime_question(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'そうなんだ！'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'いきなり趣味を聞かれても答えにくかったよね'
+		})
+		botui.message.bot({
+			delay: 3000,
+			content: 'それなら暇なときによくすることを教えてくれないかな？'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				hobby_index_name = res.value;
+				botui.message.bot({
+					loading: true
+				}).then(function(index){
+					msgIndex = index;
+				});
+				search_word(res.value,wd_action,success_food_word,failed_food_word,add_cache,select_hobby_everyday);
+			});
+		});
+	}
+
+
+	function select_hobby_everyday(){
+		botui.message.bot({
+			delay:1000,
+			content: 'じゃあそれは毎日するのかな？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: 'はい',
+					value: true
+				},{
+					text: 'いいえ',
+					value: false
+				}]
+			}).then(function(res){
+
+				// 「はい」が選択されたら質問５に遷移する
+				if(res.value == true){
+					hobby_index_period = '毎日'
+					period = 1;
+					botui.message.bot({
+						delay: 1000,
+						content: user_name+'は本当にそれが大好きなんだね！'
+					}).then(select_hobby_importance)
+				}
+
+				// 「いいえ」が選択されたら質問３に遷移する
+				else{
+					select_hobby_everyweek();
+				}
+			})
+		})
+	}
+
+	function select_hobby_everyweek(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'さすがに毎日はしたりしないんだね'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'それなら1週間で何日くらいする？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: 'しない',
+					value: 0
+				}]
+			}).then(function(res){
+                hobby_index_count = res.value;
+				// 1日～6日を選択したら質問5に遷移する
+				if(res.value>0){
+					hobby_index_period = '1週間';
+					period = 7;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なるほどね！'
+					})
+					botui.message.bot({
+						delay: 2000,
+						content: 'おいらも毎日はできないけど，そのくらいはするかな'
+					}).then(select_hobby_importance)
+				}
+
+				// 「食べない」を選択したら質問4に遷移する
+				else{
+					botui.message.bot({
+						delay: 1000,
+						content: '意外と時間なくてできないときがあるよね'
+					}).then(select_hobby_everymonth)
+				}
+			})
+		})
+	}
+
+	function select_hobby_everymonth(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'じゃあ1か月にどのくらいする？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action:[{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: '食べない',
+					value: 0
+				}]
+			}).then(function(res){
+				hobby_index_count = res.value;
+				// 「はい」，「いいえ」どちらでも質問5に遷移する
+				if(res.value>0){
+					hobby_index_period = '1か月';
+					period = 30;
+					botui.message.bot({
+						delay: 1000,
+						content: 'そのくらいの頻度が特別な感じがしていいよね！'
+					}).then(select_hobby_importance)
+				}
+				else{
+					hobby_index_period = 'たまに';
+					hobby_index_count = 1;
+					period = 180;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なかなか趣味にかけれる時間ってないんだよね'
+					}).then(select_hobby_importance)
+				}
+			})
+		})
+	}
+
+	function select_hobby_importance(){
+		botui.message.bot({
+			delay: 1000,
+			content: '質問に答えてくれてありがとう'
+		})
+		if(hobby_index_count>0){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'は'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'ことが分かったよ！'
+			})
+		}
+		if(hobby_index_count==0){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'は'+hobby_index_period+hobby_index_name+'ことが分かったよ！'
+			})
+		}
+		botui.message.bot({
+			delay: 3000,
+			content: 'じゃあそれは'+user_name+'にとってどのくらい重要なのか1～5段階で教えてほしい'
+		})
+		botui.action.button({
+			delay: 4000,
+			action: [{
+				text: '1',
+				value: 1
+			},{
+				text: '2',
+				value: 2
+			},{
+				text: '3',
+				value: 3
+			},{
+				text: '4',
+				value: 4
+			},{
+				text: '5',
+				value: 5
+			}]
+		}).then(function(res){
+			hobby_index_importance = res.value
+			if(res.value == 1 || res.value == 2){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはあんまり重要なことじゃないんだ'
+				})
+			}
+			if(res.value == 3 || res.value == 4){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはまあまあ重要なことなんだ'
+				})
+			}
+			if(res.value == 5){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはかなり重要なことなんだね！'
+				})
+			}
+		}).then(select_hobby_type)
+	}
+	
+	function select_hobby_type(){
+		if(food_index_count>0){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'ことは次のどれに分類されるかおしえてほしいな'
+			})
+		}
+		if(food_index_count==0){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+hobby_index_name+'ことは次のどれに関係しているかおしえてほしいな'
+			})
+		}
+		botui.message.bot({
+			delay: 2500,
+			content: 'もし1つに絞れない時は複数選択して大丈夫だよ！'
+		})
+		botui.action.select({
+			delay: 3500,
+			action: {
+				placeholder : "選択してね", 
+				value :'', // Selected value or selected object. Example: {value: "TR", text : "Türkçe" }
+				searchselect : true, // Default: true, false for standart dropdown
+				label : 'text', // dropdown label variable
+				multipleselect : true, // Default: false
+				options : [
+								{value: "health", text : "身体に関すること" },
+								{value: "mind", text : "心に関すること" },
+								{value: "sociality", text : "人付き合いに関すること" },
+								{value: "communication", text : "コミュニケーションに関すること" },
+						  ],
+				button: {
+				  icon: '',
+				  label: 'OK'
+				}
+			}
+		 }).then(function(res){
+			var category = res.value.split(',');
+
+			category_organize(category,category_box);
+
+			console.log(category_box)
+			add_routines(hobby_index_name,period,hobby_index_count,hobby_index_importance,category_box);
+			botui.message.bot({
+				delay: 1000,
+				content: 'なるほどね！'
+			})
+			botui.message.bot({
+				delay: 3000,
+				content: user_name+'にとっては'+res.text+'に関係しているんだね！'
+			})
+		 }).then(select_another_hobby)
+	}
+
+
+    function select_another_hobby(){
+		if(question_count>3){
+			hobby_question_end();
+		}
+		else{
+			botui.message.bot({
+				delay: 3000,
+				content: '他にも趣味はある？'
+			}).then(function(){
+				botui.action.button({
+					delay: 1000,
+					action: [{
+						text: 'はい',
+						value: true
+					},{
+						text: 'いいえ',
+						value: false
+					}]
+				}).then(function(res){
+	　　　　　　　　　
+					// 「はい」が選択されたら質問1に戻る
+					if(res.value == true){
+						question_count++;
+						botui.message.bot({
+							delay: 1000,
+							content: 'ホント！'
+						})
+						botui.message.bot({
+							delay: 2000,
+							content: 'それならもう一回質問するね'
+						}).then(select_exit_hobby)
+					}
+	
+					// 「いいえ」が選択されたら食事に関する質問は終わりにする
+					else{
+						hobby_question_end();
+					}
+				})
+			})
+		}	
+	}
+
+	function hobby_question_end(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'じゃあ趣味に関しての質問は終わりにするね'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'いっぱい質問に答えてくれてありがとね'
+		})
+		botui.message.bot({
+			delay: 3000,
+			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
+		}).then(select_index_category);
+	}
+
+	function success_food_word(func){
 		botui.message.update(msgIndex,{
 			content: 'そうなんだ!'
-		}).then(select_food_everyday);
+		}).then(func);
 		
 	}
 	
-	function failed_food_word(text){
+	function failed_food_word(text,func){
 		botui.message.update(msgIndex,{
 			content: 'それについておいらはよく知らないんだ'
 		});
@@ -531,11 +947,13 @@ $(function(){
 						add_cache(text,res.value)
 					}
 				})
-			}).then(select_food_everyday)
+			}).then(func)
 		})
 	}
 
-	function search_word(word,wd,func1,func2,func3){
+
+	/////////   ユーザが入力した単語を判別する(関数)　　//////////////////////////////////////
+	function search_word(word,wd,func1,func2,func3,next){
 		find_cache(word).success(function(data){
 			if(data['label'] == word && data['wd_type'] == wd){
 				func1();
@@ -544,23 +962,23 @@ $(function(){
 				search_subclass(word,wd).success(function(data){
 					//console.log(data.results.bindings[0].b["value"])
 					if(data.results.bindings.length>0){
-						func1();
+						func1(next);
 						func3(word,wd);
 					}
 					else{
 						search_instanceclass(word,wd).success(function(data){
 							if(data.results.bindings.length>0){
-								func1();
+								func1(next);
 								func3(word,wd);
 							}
 							else{
 								search_include_subclass(word,wd).success(function(data){
 									if(data.results.bindings.length>0){
-										func1();
+										func1(next);
 										func3(word,wd);
 									}
 									else{
-										func2(word);
+										func2(word,next);
 									}
 								})
 							}
@@ -571,6 +989,7 @@ $(function(){
 		})
 	}
 	
+	/////////  入力された単語がWikidata上に存在するか調べる(sparql)　　///////////////////////////
 	function exist_subclass(word){
 		const query =`
 		PREFIX wd: <http://www.wikidata.org/entity/>
@@ -599,6 +1018,7 @@ $(function(){
 		
 	}
 
+    ////////     入力された単語をsubclass ofから調べる(sparql)    ////////////////////////
 	function search_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
@@ -628,6 +1048,7 @@ $(function(){
 		})
 	};
 	
+	//////////   入力された単語をinstance ofからたどって調べる(sparql)    ////////////////////////
 	function search_instanceclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
@@ -658,7 +1079,8 @@ $(function(){
 			dataType: 'json',
 		})
 	}
-
+	
+	////////////   Wikidata内に主辞となる単語が存在するか調べる(sparql)　　////////////////////////
 	function search_include_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
@@ -680,6 +1102,8 @@ $(function(){
 			dataType: 'json',
 		})
 	}
+
+	//////////　　入力された単語がキャッシュに存在するか判別(POST)　　///////////////////////
 	function find_cache(text){
 		return $.ajax({
 			url: '/question/register',
@@ -689,7 +1113,8 @@ $(function(){
 			}
 		})
 	}
-
+	
+	//////////    キャッシュに追加(POST)　　///////////////////////////////////
 	function add_cache(text,wd){
 		$.ajax({
 			url: '/question/addCache',
@@ -701,6 +1126,7 @@ $(function(){
 		})
 	}
 
+    ////////   ルーティンをデータベースに追加(POST)　　////////////////////////
 	function add_routines(text,period,count,importance,category){
 		$.ajax({
 			url: '/question/addRoutines',
