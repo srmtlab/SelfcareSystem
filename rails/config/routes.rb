@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   get 'question', to: 'home#Question'
   post "question/register", to: "home#register"
   post "question/addCache", to: "home#addCache"
+  post "question/addRoutines", to: "home#addRoutines"
 end

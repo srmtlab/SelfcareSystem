@@ -39,14 +39,15 @@ $(function(){
 	var botui = new BotUI('hello-world');
 	var char_name = "タロウ";
 	var user_name = "ようた"
-	var time = 1000;
-	var count = 1;
+	var question_count = 1;
+
+	var period = 1;
+	var category_box =['false','false','false','false'];
 
 	var food_index_name =" ";
 	var food_index_period;
-	var food_index_count = 0;
-	var food_index_type=" ";
-	var food_index_importance;
+	var food_index_count = 1;
+	var food_index_importance = 1;
 	
 	var index_category=['食事','趣味','睡眠','人付き合い'];
 	var wd_food = "wd:Q2095";
@@ -163,7 +164,6 @@ $(function(){
 					msgIndex = index;
 				});
 				search_word(res.value,wd_food,success_food_word,failed_food_word,add_cache);
-				find_cache(res.value)
 			});
 		});
 	}
@@ -190,6 +190,7 @@ $(function(){
 				// 「はい」が選択されたら質問５に遷移する
 				if(res.value == true){
 					food_index_period = '毎日'
+					period = 1;
 					botui.message.bot({
 						delay: 1000,
 						content: user_name+'は本当にそれが大好きなんだね！'
@@ -244,6 +245,7 @@ $(function(){
 				// 1日～6日を選択したら質問5に遷移する
 				if(res.value>0){
 					food_index_period = '1週間';
+					period = 7;
 					botui.message.bot({
 						delay: 1000,
 						content: 'なるほどね！'
@@ -301,7 +303,7 @@ $(function(){
 				// 「はい」，「いいえ」どちらでも質問5に遷移する
 				if(res.value>0){
 					food_index_period = '1か月';
-					
+					period = 30;
 					botui.message.bot({
 						delay: 1000,
 						content: 'そのくらいの頻度が特別な感じがしていいよね！'
@@ -309,6 +311,8 @@ $(function(){
 				}
 				else{
 					food_index_period = 'たまに';
+					food_index_count = 1;
+					period = 180;
 					botui.message.bot({
 						delay: 1000,
 						content: 'なかなか食べれないからこそ食べたときにうまいってなるよね！'
@@ -419,6 +423,12 @@ $(function(){
 				}
 			}
 		 }).then(function(res){
+			var category = res.value.split(',');
+
+			category_organize(category,category_box);
+
+			console.log(category_box)
+			add_routines(food_index_name,period,food_index_count,food_index_importance,category_box);
 			botui.message.bot({
 				delay: 1000,
 				content: 'なるほどね！'
@@ -433,7 +443,7 @@ $(function(){
 	///////// 質問5　ほかに好きな食べ物やよく食べる物はないかどうかを聞く //////////////////////////////////////
 
 	function select_another_food(){
-		if(count>3){
+		if(question_count>3){
 			food_question_end();
 		}
 		else{
@@ -454,7 +464,7 @@ $(function(){
 	　　　　　　　　　
 					// 「はい」が選択されたら質問1に戻る
 					if(res.value == true){
-						count++;
+						question_count++;
 						botui.message.bot({
 							delay: 1000,
 							content: 'ホント！'
@@ -498,14 +508,30 @@ $(function(){
 		
 	}
 	
-	function failed_food_word(){
-		botui.message.bot({
-			delay:1000,
+	function failed_food_word(text){
+		botui.message.update(msgIndex,{
 			content: 'それについておいらはよく知らないんだ'
 		});
 		botui.message.bot({
 			delay:2000,
 			content: '良かったらそれが何なのか僕に教えてくれないか？'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				exist_subclass(res.value).success(function(data){
+					if(data.results.bindings.length>0){
+						var cache_wd = 'wd:'+data.results.bindings[0].a["value"].split('/')[4]
+						add_cache(text,cache_wd)
+					}
+					else{
+						add_cache(text,res.value)
+					}
+				})
+			}).then(select_food_everyday)
 		})
 	}
 
@@ -516,6 +542,7 @@ $(function(){
 			}
 			else{
 				search_subclass(word,wd).success(function(data){
+					//console.log(data.results.bindings[0].b["value"])
 					if(data.results.bindings.length>0){
 						func1();
 						func3(word,wd);
@@ -533,7 +560,7 @@ $(function(){
 										func3(word,wd);
 									}
 									else{
-										func2();
+										func2(word);
 									}
 								})
 							}
@@ -550,11 +577,17 @@ $(function(){
 		PREFIX wds: <http://www.wikidata.org/entity/statement/> 
 		PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 		PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-		SELECT ?b
+		SELECT ?a
 		WHERE{
-		   ?a rdfs:label "`+word+`"@ja;
-			  wdt:P279+ ?b.
-		}`
+ 			{
+ 				?a rdfs:label "`+word+`"@ja;
+ 			}
+ 			UNION
+  			{
+  				?a skos:altLabel "`+word+`"@ja;
+  			}
+		}
+		LIMIT 1`
 		return $.ajax({
 			type: 'GET',
 			url: 'https://query.wikidata.org/sparql',
@@ -666,5 +699,36 @@ $(function(){
 				'wd_type': wd
 			}
 		})
+	}
+
+	function add_routines(text,period,count,importance,category){
+		$.ajax({
+			url: '/question/addRoutines',
+			type: 'POST',
+			data: {
+				'text': text,
+				'period': period,
+				'count': count,
+				'importance': importance,
+				'category': category
+			}
+		})
+	}
+
+	function category_organize(category,category_box){
+		for(var i=0; i<category.length; i++){
+			if(category[i]=='health'){
+				category_box[0]='true'
+			}
+			else if(category[i]=='mind'){
+				category_box[1]='true'
+			}
+			else if(category[i]=='sociality'){
+				category_box[2]='true'
+			}
+			else if(category[i]=='communication'){
+				category_box[3]='true'
+			}
+		}
 	}
 });
