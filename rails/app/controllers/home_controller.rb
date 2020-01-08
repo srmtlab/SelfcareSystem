@@ -55,12 +55,22 @@ class HomeController < ApplicationController
             end
             i_category += 1
         end
+
+        cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
+        if !cache_find then
+            cache = Cache.new(
+                label: params[:routine_text]
+            )
+            cache.save
+            cache_find = Cache.all[Cache.count - 1]
+        end
         routine = Routine.new(
             user_id: current_user.id,
             text: params[:routine_text],
             period: params[:routine_period],
             count: params[:routine_count],
-            categories: category_box
+            categories: category_box,
+            cache: cache_find
         )
         if routine.save then
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
