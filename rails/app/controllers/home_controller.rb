@@ -82,6 +82,7 @@ class HomeController < ApplicationController
             end
             i_category += 1
         end
+        
         routines = Routine.new(
             user_id: current_user.id,
             text: params['text'],

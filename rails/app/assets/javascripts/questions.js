@@ -42,7 +42,13 @@ $(function(){
 	var question_count = 1;
    
 	var period = 1;
-	var category_box =['false','false','false','false'];
+	//var category_box =[];
+	var category_box =["false","false","false","false"];
+
+	var health_boolean = "false";
+	var mind_boolean = "false";
+	var sociality_boolean = "false";
+	var communication_boolean = "false";
 
 	var food_index_name =" ";
 	var food_index_period;
@@ -64,7 +70,28 @@ $(function(){
 	var wd_action = "wd:Q4026292"
 	var wd_location = "wd:Q2221906"
 	var s = 0;
-    
+	
+	function test(category,category_box){
+		console.log(category)
+		if(category[i]=='health'){
+			category_box[0]='true'
+			console.log(0)
+		}
+		else if(category[i]=='mind'){
+			category_box[1]='true'
+			console.log(1)
+		}
+		else if(category[i]=='sociality'){
+			category_box[2]='true'
+			console.log(2)
+		}
+		else if(category[i]=='communication'){
+			category_box[3]='true'
+			console.log(3)
+		}
+		console.log(category_boxs)
+	}
+	
 	//////////////////// 質問に入る前の会話の流れ　/////////////////////////////////////////////////////////
 	botui.message.bot({
 
@@ -94,6 +121,7 @@ $(function(){
 				value: 'いいよ'
 			}]
 		}).then(function(res){
+			//test(category_box,category_boxs)
 			botui.message.bot({
 				delay:1000,
 				content:'ありがとう！'
@@ -430,9 +458,9 @@ $(function(){
 				multipleselect : true, // Default: false
 				options : [
 								{value: "health", text : "身体に関すること" },
-								{value: "mind", text : "心に関すること" },
-								{value: "sociality", text : "人付き合いに関すること" },
-								{value: "communication", text : "コミュニケーションに関すること" },
+								{value: "mind", text : "感覚に関すること" },
+								{value: "sociality", text : "学び・精神に関すること" },
+								{value: "communication", text : "対人関係に関すること" },
 						  ],
 				button: {
 				  icon: '',
@@ -441,10 +469,15 @@ $(function(){
 			}
 		 }).then(function(res){
 			var category = res.value.split(',');
+			for(var i=0;i<category.length;i++){
+				console.log(category[i])
+				test(category[i],category_box)
+			}
+			//console.log(category_box)
+            //test(category_box,category_boxs)
+			//category_organize(category,category_box);
 
-			category_organize(category,category_box);
-
-			console.log(category_box)
+			//console.log(category)
 			add_routines(food_index_name,period,food_index_count,food_index_importance,category_box);
 			botui.message.bot({
 				delay: 1000,
@@ -456,6 +489,7 @@ $(function(){
 			})
 		 }).then(select_another_food)
 	}
+	
 
 	///////// 質問5　ほかに好きな食べ物やよく食べる物はないかどうかを聞く //////////////////////////////////////
 
@@ -837,9 +871,9 @@ $(function(){
 				multipleselect : true, // Default: false
 				options : [
 								{value: "health", text : "身体に関すること" },
-								{value: "mind", text : "心に関すること" },
-								{value: "sociality", text : "人付き合いに関すること" },
-								{value: "communication", text : "コミュニケーションに関すること" },
+								{value: "mind", text : "感覚に関すること" },
+								{value: "sociality", text : "学び・精神に関すること" },
+								{value: "communication", text : "対人関係に関すること" },
 						  ],
 				button: {
 				  icon: '',
@@ -1215,9 +1249,9 @@ $(function(){
 				multipleselect : true, // Default: false
 				options : [
 								{value: "health", text : "身体に関すること" },
-								{value: "mind", text : "心に関すること" },
-								{value: "sociality", text : "人付き合いに関すること" },
-								{value: "communication", text : "コミュニケーションに関すること" },
+								{value: "mind", text : "感覚に関すること" },
+								{value: "sociality", text : "学び・精神に関すること" },
+								{value: "communication", text : "対人関係に関すること" },
 						  ],
 				button: {
 				  icon: '',
