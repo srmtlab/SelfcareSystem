@@ -73,23 +73,23 @@ $(function(){
 	
 	function test(category,category_box){
 		console.log(category)
-		if(category[i]=='health'){
+		if(category=='health'){
 			category_box[0]='true'
 			console.log(0)
 		}
-		else if(category[i]=='mind'){
+		else if(category=='mind'){
 			category_box[1]='true'
 			console.log(1)
 		}
-		else if(category[i]=='sociality'){
+		else if(category=='sociality'){
 			category_box[2]='true'
 			console.log(2)
 		}
-		else if(category[i]=='communication'){
+		else if(category=='communication'){
 			category_box[3]='true'
 			console.log(3)
 		}
-		console.log(category_boxs)
+		console.log(category_box)
 	}
 	
 	//////////////////// 質問に入る前の会話の流れ　/////////////////////////////////////////////////////////
