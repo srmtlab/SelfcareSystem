@@ -45,11 +45,6 @@ $(function(){
 	//var category_box =[];
 	var category_box =["false","false","false","false"];
 
-	var health_boolean = "false";
-	var mind_boolean = "false";
-	var sociality_boolean = "false";
-	var communication_boolean = "false";
-
 	var food_index_name =" ";
 	var food_index_period;
 	var food_index_count = 1;
@@ -65,7 +60,17 @@ $(function(){
 	var before_sleep_index_count = 1;
 	var before_sleep_index_importance = 1;
 
-	var index_category=['食事','趣味','睡眠前','人付き合い'];
+	var communication_index_name =" ";
+	var communication_index_period;
+	var communication_index_count = 1;
+	var communication_index_importance = 1;
+
+	var location_index_name =" ";
+	var location_index_period;
+	var location_index_count = 1;
+	var location_index_importance = 1;
+
+	var index_category=['食事','趣味','睡眠前','人付き合い','場所'];
 	var wd_food = "wd:Q2095";
 	var wd_action = "wd:Q4026292"
 	var wd_location = "wd:Q2221906"
@@ -150,25 +155,28 @@ $(function(){
 				},{
 					text: index_category[3],
 					value: 3
+				},{
+					text: index_category[4],
+					value: 4
 				}]
 			}).then(function(res){
 				index_category[res.value] = '';
 				if(res.value==0){
-					question_count=0
+					question_count=1
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
 					}).then(input_food_question)
 				}
 				if(res.value==1){
-					question_count=0
+					question_count=1
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
 					}).then(select_exit_hobby)
 				}
 				if(res.value==2){
-					question_count=0
+					question_count=1
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
@@ -176,11 +184,18 @@ $(function(){
 
 				}
 				if(res.value==3){
-					question_count=0
+					question_count=1
 					botui.message.bot({
 						delay: 1000,
 						content: 'じゃあそれについてのことを今から質問するね！'
-					}).then()
+					}).then(select_communication)
+				}
+				if(res.value==4){
+					question_count=1
+					botui.message.bot({
+						delay: 1000,
+						content: 'じゃあそれについてのことを今から質問するね！'
+					}).then(select_location)
 				}
 			})	
 	}
@@ -208,7 +223,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_food,success_food_word,failed_food_word,add_cache,select_food_everyday);
+				search_word(res.value,wd_food,success_word,failed_food_word,add_cache,select_food_everyday);
 			});
 		});
 	}
@@ -355,7 +370,7 @@ $(function(){
 					}).then(select_food_importance)
 				}
 				else{
-					food_index_period = 'たまに';
+					food_index_period = 'たま';
 					food_index_count = 1;
 					period = 180;
 					botui.message.bot({
@@ -373,16 +388,16 @@ $(function(){
 			delay: 1000,
 			content: '質問に答えてくれてありがとう'
 		})
-		if(food_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 2000,
 				content: '質問から'+user_name+'は'+food_index_period+'に'+food_index_count+'回'+food_index_name+'を食べることが分かったよ！'
 			})
 		}
-		if(food_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 2000,
-				content: '質問から'+user_name+'は'+food_index_period+food_index_name+'を食べることが分かったよ！'
+				content: '質問から'+user_name+'は'+food_index_period+","+food_index_name+'を食べることが分かったよ！'
 			})
 		}
 		botui.message.bot({
@@ -432,16 +447,16 @@ $(function(){
 
 
 	function select_food_type(){
-		if(food_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 1000,
 				content: 'それじゃあ最後に'+user_name+'にとって、'+food_index_period+'に'+food_index_count+'回'+food_index_name+'を食べることは次のどれに分類されるかおしえてほしいな'
 			})
 		}
-		if(food_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 1000,
-				content: 'それじゃあ最後に'+user_name+'にとって、'+food_index_period+food_index_name+'を食べることは次のどれに関係しているかおしえてほしいな'
+				content: 'それじゃあ最後に'+user_name+'にとって、'+food_index_period+","+food_index_name+'を食べることは次のどれに関係しているかおしえてほしいな'
 			})
 		}
 		botui.message.bot({
@@ -515,6 +530,11 @@ $(function(){
 	　　　　　　　　　
 					// 「はい」が選択されたら質問1に戻る
 					if(res.value == true){
+						food_index_name =" ";
+	                    food_index_period;
+						food_index_count = 1;
+						food_index_importance = 1;
+
 						question_count++;
 						botui.message.bot({
 							delay: 1000,
@@ -539,15 +559,15 @@ $(function(){
 
 	function food_question_end(){
 		botui.message.bot({
-			delay: 1000,
+			delay: 3000,
 			content: 'じゃあ食べ物に関しての質問は終わりにするね'
 		})
 		botui.message.bot({
-			delay: 2000,
+			delay: 4000,
 			content: 'いっぱい質問に答えてくれてありがとね'
 		})
 		botui.message.bot({
-			delay: 3000,
+			delay: 5000,
 			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
 		}).then(select_index_category);
 	}
@@ -599,7 +619,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_action,success_food_word,failed_food_word,add_cache,select_hobby_everyday);
+				search_word(res.value,wd_action,success_word,failed_action_word,add_cache,select_hobby_everyday);
 			});
 		});
 	}
@@ -629,7 +649,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_action,success_food_word,failed_food_word,add_cache,select_hobby_everyday);
+				search_word(res.value,wd_action,success_word,failed_action_word,add_cache,select_hobby_everyday);
 			});
 		});
 	}
@@ -770,7 +790,7 @@ $(function(){
 					}).then(select_hobby_importance)
 				}
 				else{
-					hobby_index_period = 'たまに';
+					hobby_index_period = 'たま';
 					hobby_index_count = 1;
 					period = 180;
 					botui.message.bot({
@@ -787,16 +807,16 @@ $(function(){
 			delay: 1000,
 			content: '質問に答えてくれてありがとう'
 		})
-		if(hobby_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 2000,
-				content: '質問から'+user_name+'は'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'ことが分かったよ！'
+				content: '質問から'+user_name+'の趣味で、'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'が分かったよ！'
 			})
 		}
-		if(hobby_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 2000,
-				content: '質問から'+user_name+'は'+hobby_index_period+hobby_index_name+'ことが分かったよ！'
+				content: '質問から'+user_name+'の趣味で'+hobby_index_period+","+hobby_index_name+'が分かったよ！'
 			})
 		}
 		botui.message.bot({
@@ -845,16 +865,16 @@ $(function(){
 	}
 	
 	function select_hobby_type(){
-		if(hobby_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 1000,
-				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'ことは次のどれに分類されるかおしえてほしいな'
+				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+'に'+hobby_index_count+'回'+hobby_index_name+'が次のどれに分類されるかおしえてほしいな'
 			})
 		}
-		if(hobby_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 1000,
-				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+hobby_index_name+'ことは次のどれに関係しているかおしえてほしいな'
+				content: 'それじゃあ最後に'+user_name+'にとって、'+hobby_index_period+","+hobby_index_name+'が次のどれに関係しているかおしえてほしいな'
 			})
 		}
 		botui.message.bot({
@@ -921,6 +941,11 @@ $(function(){
 	　　　　　　　　　
 					// 「はい」が選択されたら質問1に戻る
 					if(res.value == true){
+						hobby_index_name =" ";
+						hobby_index_period;
+						hobby_index_count = 1;
+						hobby_index_importance = 1;
+
 						question_count++;
 						botui.message.bot({
 							delay: 1000,
@@ -943,15 +968,15 @@ $(function(){
 
 	function hobby_question_end(){
 		botui.message.bot({
-			delay: 1000,
+			delay: 3000,
 			content: 'じゃあ趣味に関しての質問は終わりにするね'
 		})
 		botui.message.bot({
-			delay: 2000,
+			delay: 4000,
 			content: 'いっぱい質問に答えてくれてありがとね'
 		})
 		botui.message.bot({
-			delay: 3000,
+			delay: 5000,
 			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
 		}).then(select_index_category);
 	}
@@ -1008,7 +1033,7 @@ $(function(){
 				}).then(function(index){
 					msgIndex = index;
 				});
-				search_word(res.value,wd_action,success_food_word,failed_food_word,add_cache,select_before_sleep_everyday);
+				search_word(res.value,wd_action,success_word,failed_action_word,add_cache,select_before_sleep_everyday);
 			});
 		});
 	}
@@ -1148,7 +1173,7 @@ $(function(){
 					}).then(select_before_sleep_importance)
 				}
 				else{
-					before_sleep_index_period = 'たまに';
+					before_sleep_index_period = 'たま';
 					before_sleep_index_count = 1;
 					period = 180;
 					botui.message.bot({
@@ -1165,16 +1190,16 @@ $(function(){
 			delay: 1000,
 			content: '質問に答えてくれてありがとう'
 		})
-		if(before_sleep_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 2000,
-				content: '質問から'+user_name+'は'+before_sleep_index_period+'に'+before_sleep_index_count+'回'+before_sleep_index_name+'ことが分かったよ！'
+				content: '質問から'+user_name+'は、寝る前の習慣で'+before_sleep_index_period+'に'+before_sleep_index_count+'回'+before_sleep_index_name+'が分かったよ！'
 			})
 		}
-		if(before_sleep_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 2000,
-				content: '質問から'+user_name+'は'+before_sleep_index_period+before_sleep_index_name+'ことが分かったよ！'
+				content: '質問から'+user_name+'は、寝る前の習慣で'+before_sleep_index_period+","+before_sleep_index_name+'が分かったよ！'
 			})
 		}
 		botui.message.bot({
@@ -1223,16 +1248,16 @@ $(function(){
 	}
 
 	function select_before_sleep_type(){
-		if(before_sleep_index_count>0){
+		if(period>1){
 			botui.message.bot({
 				delay: 1000,
-				content: 'それじゃあ最後に'+user_name+'にとって、'+before_sleep_index_period+'に'+before_sleep_index_count+'回'+before_sleep_index_name+'ことは次のどれに分類されるかおしえてほしいな'
+				content: 'それじゃあ最後に'+user_name+'にとって、寝る前の習慣で'+before_sleep_index_period+'に'+before_sleep_index_count+'回'+before_sleep_index_name+'が次のどれに分類されるかおしえてほしいな'
 			})
 		}
-		if(hobby_index_count==0){
+		if(period==1){
 			botui.message.bot({
 				delay: 1000,
-				content: 'それじゃあ最後に'+user_name+'にとって、'+before_sleep_index_period + before_sleep_index_name+'ことは次のどれに関係しているかおしえてほしいな'
+				content: 'それじゃあ最後に'+user_name+'にとって、寝る前の習慣で'+before_sleep_index_period + ","+before_sleep_index_name+'が次のどれに関係しているかおしえてほしいな'
 			})
 		}
 		botui.message.bot({
@@ -1298,6 +1323,11 @@ $(function(){
 	　　　　　　　　　
 					// 「はい」が選択されたら質問1に戻る
 					if(res.value == true){
+						before_sleep_index_name=" ";
+						before_sleep_index_period;
+						before_sleep_index_count = 1;
+						before_sleep_index_importance = 1;
+
 						question_count++;
 						botui.message.bot({
 							delay: 1000,
@@ -1316,16 +1346,800 @@ $(function(){
 
 	function before_sleep_question_end(){
 		botui.message.bot({
-			delay: 1000,
+			delay: 3000,
 			content: 'じゃあ睡眠前に関しての質問は終わりにするね'
 		})
 		botui.message.bot({
-			delay: 2000,
+			delay: 4000,
 			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
 		}).then(select_index_category);
 	}
-	///////   入力された単語がWikidata内またはキャッシュに存在した場合の処理   ///////////////////////////
-	function success_food_word(func){
+
+///////////  人付き合いに関する質問開始  ///////////////////////////////////////////////////////////////////////////////////////////////////
+　　function select_communication(){
+		botui.message.bot({
+			delay: 1000,
+			content: user_name+'は一人でいるのが好き、それとも誰かといるのが好き？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '一人でいる',
+					value: true
+				},{
+					text: '誰かといる',
+					value: false
+				}]
+			}).then(function(res){
+				if(res.value==true){
+					input_alone_communication_question();
+				}	
+				else{
+					input_someone_communication_question();
+				}
+			})
+		})
+	}
+
+	function input_alone_communication_question(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'そうなんだ！'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'じゃあ一人でいるときによくすることを教えてほしいな'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				communication_index_name = res.value;
+				botui.message.bot({
+					loading: true
+				}).then(function(index){
+					msgIndex = index;
+				});
+				search_word(res.value,wd_action,success_word,failed_action_word,add_cache,select_communication_everyday);
+			});
+		});
+	}
+
+	function input_someone_communication_question(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'そうなんだ！'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'それじゃあ，誰かといるときによくすることを教えてほしいな'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				communication_index_name = res.value;
+				botui.message.bot({
+					loading: true
+				}).then(function(index){
+					msgIndex = index;
+				});
+				search_word(res.value,wd_action,success_word,failed_action_word,add_cache,select_communication_everyday);
+			});
+		});
+	}
+
+
+	function select_communication_everyday(){
+		botui.message.bot({
+			delay:1000,
+			content: 'じゃあそれは毎日するのかな？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: 'はい',
+					value: true
+				},{
+					text: 'いいえ',
+					value: false
+				}]
+			}).then(function(res){
+
+				// 「はい」が選択されたら質問５に遷移する
+				if(res.value == true){
+					communication_index_period = '毎日'
+					period = 1;
+					botui.message.bot({
+						delay: 1000,
+						content: user_name+'は本当にそれが大好きなんだね！'
+					}).then(select_communication_importance)
+				}
+
+				// 「いいえ」が選択されたら質問３に遷移する
+				else{
+					select_communication_everyweek();
+				}
+			})
+		})
+	}
+
+	function select_communication_everyweek(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'さすがに毎日はしたりしないんだね'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'それなら1週間で何日くらいする？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: 'しない',
+					value: 0
+				}]
+			}).then(function(res){
+				communication_index_count = res.value;
+				// 1日～6日を選択したら質問5に遷移する
+				if(res.value>0){
+					communication_index_period = '1週間';
+					period = 7;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なるほどね！'
+					})
+					botui.message.bot({
+						delay: 2000,
+						content: 'おいらも毎日はできないけど，そのくらいはするかな'
+					}).then(select_communication_importance)
+				}
+
+				// 「食べない」を選択したら質問4に遷移する
+				else{
+					botui.message.bot({
+						delay: 1000,
+						content: '意外と時間なくてできないときがあるよね'
+					}).then(select_communication_everymonth)
+				}
+			})
+		})
+	}
+
+	function select_communication_everymonth(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'じゃあ1か月にどのくらいする？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action:[{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: 'しない',
+					value: 0
+				}]
+			}).then(function(res){
+				communication_index_count = res.value;
+				// 「はい」，「いいえ」どちらでも質問5に遷移する
+				if(res.value>0){
+					communication_index_period = '1か月';
+					period = 30;
+					botui.message.bot({
+						delay: 1000,
+						content: 'そのくらいの頻度が特別な感じがしていいよね！'
+					}).then(select_communication_importance)
+				}
+				else{
+					communication_index_period = 'たま';
+					communication_index_count = 1;
+					period = 180;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なかなかする時間ってないんだよね'
+					}).then(select_communication_importance)
+				}
+			})
+		})
+	}
+
+	function select_communication_importance(){
+		botui.message.bot({
+			delay: 1000,
+			content: '質問に答えてくれてありがとう'
+		})
+		if(period>1){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'の習慣で、'+communication_index_period+'に'+communication_index_count+'回'+communication_index_name+'が分かったよ！'
+			})
+		}
+		if(period==1){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'の習慣で'+communication_index_period+","+communication_index_name+'が分かったよ！'
+			})
+		}
+		botui.message.bot({
+			delay: 3000,
+			content: 'じゃあそれは'+user_name+'にとってどのくらい重要なのか1～5段階で教えてほしい'
+		})
+		botui.action.button({
+			delay: 4000,
+			action: [{
+				text: '1',
+				value: 1
+			},{
+				text: '2',
+				value: 2
+			},{
+				text: '3',
+				value: 3
+			},{
+				text: '4',
+				value: 4
+			},{
+				text: '5',
+				value: 5
+			}]
+		}).then(function(res){
+			communication_index_importance = res.value
+			if(res.value == 1 || res.value == 2){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはあんまり重要なことじゃないんだ'
+				})
+			}
+			if(res.value == 3 || res.value == 4){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはまあまあ重要なことなんだ'
+				})
+			}
+			if(res.value == 5){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはかなり重要なことなんだね！'
+				})
+			}
+		}).then(select_communication_type)
+	}
+
+	function select_communication_type(){
+		if(period>1){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+communication_index_period+'に'+communication_index_count+'回'+communication_index_name+'が次のどれに分類されるかおしえてほしいな'
+			})
+		}
+		if(period==1){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+communication_index_period+","+communication_index_name+'が次のどれに関係しているかおしえてほしいな'
+			})
+		}
+		botui.message.bot({
+			delay: 2500,
+			content: 'もし1つに絞れない時は複数選択して大丈夫だよ！'
+		})
+		botui.action.select({
+			delay: 3500,
+			action: {
+				placeholder : "選択してね", 
+				value :'', // Selected value or selected object. Example: {value: "TR", text : "Türkçe" }
+				searchselect : true, // Default: true, false for standart dropdown
+				label : 'text', // dropdown label variable
+				multipleselect : true, // Default: false
+				options : [
+								{value: "health", text : "身体に関すること" },
+								{value: "mind", text : "感覚に関すること" },
+								{value: "sociality", text : "学び・精神に関すること" },
+								{value: "communication", text : "対人関係に関すること" },
+						],
+				button: {
+				icon: '',
+				label: 'OK'
+				}
+			}
+		}).then(function(res){
+			var category = res.value.split(',');
+
+			category_organize(category,category_box);
+
+			//console.log(category_box)
+			add_routines(communication_index_name,period,communication_index_count,communication_index_importance,category_box);
+			botui.message.bot({
+				delay: 1000,
+				content: 'なるほどね！'
+			})
+			botui.message.bot({
+				delay: 3000,
+				content: user_name+'にとっては'+res.text+'に関係しているんだね！'
+			})
+		}).then(select_another_communication)
+	}
+
+
+	function select_another_communication(){
+		if(question_count>3){
+			communication_question_end();
+		}
+		else{
+			botui.message.bot({
+				delay: 3000,
+				content: 'もう一度同じ質問に回答する？'
+			}).then(function(){
+				botui.action.button({
+					delay: 1000,
+					action: [{
+						text: 'はい',
+						value: true
+					},{
+						text: 'いいえ',
+						value: false
+					}]
+				}).then(function(res){
+	　　　　　　　　　
+					// 「はい」が選択されたら質問1に戻る
+					if(res.value == true){
+						communication_index_name =" ";
+	                    communication_index_period;
+	                    communication_index_count = 1;
+						communication_index_importance = 1;
+						
+						question_count++;
+						botui.message.bot({
+							delay: 1000,
+							content: '分かったよ！'
+						})
+						botui.message.bot({
+							delay: 2000,
+							content: 'それならもう一回質問するね'
+						}).then(select_communication)
+					}
+
+					// 「いいえ」が選択されたら食事に関する質問は終わりにする
+					else{
+						communication_question_end();
+					}
+				})
+			})
+		}	
+	}
+
+	function communication_question_end(){
+		botui.message.bot({
+			delay: 3000,
+			content: 'じゃあ人付き合いに関しての質問は終わりにするね'
+		})
+		botui.message.bot({
+			delay: 4000,
+			content: 'いっぱい質問に答えてくれてありがとね'
+		})
+		botui.message.bot({
+			delay: 5000,
+			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
+		}).then(select_index_category);
+	}
+
+///////  人付き合いに関する質問の終了  ////////////////////////////////////////////////////////////////////////
+
+///////  場所に関する質問の開始   /////////////////////////////////////////////////////////////////////////////
+
+	function select_location(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'おいらは普段いろんな場所に出かけるのが好きなんだ'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: '最近は漫画喫茶に行くのに、はまってるんだよね！'
+		})
+		botui.message.bot({
+			delay: 3000,
+			content: user_name+'は普段よく行く場所ってあったりするのかな?'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: 'ある',
+					value: true
+				},{
+					text: 'ない',
+					value: false
+				}]
+			}).then(function(res){
+				if(res.value==true){
+					botui.message.bot({
+						delay: 1000,
+						content: 'そうなんだ！'
+					}).then(input_location_question)
+				}	
+				else{
+					location_question_end();
+				}
+			})
+		})
+	}
+
+	function input_location_question(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'じゃあどこによく行くのか教えてほしいな'
+		}).then(function(){
+			botui.action.text({
+				delay:1000,
+				action:{
+					placeholder: '入力してね！'
+				}
+			}).then(function(res){
+				location_index_name = res.value;
+				botui.message.bot({
+					loading: true
+				}).then(function(index){
+					msgIndex = index;
+				});
+				search_word(res.value,wd_location,success_word,failed_location_word,add_cache,select_location_everyday);
+			});
+		});
+	}
+
+	function select_location_everyday(){
+		botui.message.bot({
+			delay:1000,
+			content: 'じゃあそこには毎日行ったりするのかな？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: 'はい',
+					value: true
+				},{
+					text: 'いいえ',
+					value: false
+				}]
+			}).then(function(res){
+
+				// 「はい」が選択されたら質問５に遷移する
+				if(res.value == true){
+					location_index_period = '毎日'
+					period = 1;
+					botui.message.bot({
+						delay: 1000,
+						content: user_name+'は本当にその場所が大好きなんだね！'
+					}).then(select_location_importance)
+				}
+
+				// 「いいえ」が選択されたら質問３に遷移する
+				else{
+					select_location_everyweek();
+				}
+			})
+		})
+	}
+
+	function select_location_everyweek(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'さすがに毎日は行ったりしないんだね'
+		})
+		botui.message.bot({
+			delay: 2000,
+			content: 'それなら1週間で何日くらい行く？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: '行かない',
+					value: 0
+				}]
+			}).then(function(res){
+				location_index_count = res.value;
+				// 1日～6日を選択したら質問5に遷移する
+				if(res.value>0){
+					location_index_period = '1週間';
+					period = 7;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なるほどね！'
+					})
+					botui.message.bot({
+						delay: 2000,
+						content: 'おいらも毎日は行かないけど，そのくらいは行くかな'
+					}).then(select_location_importance)
+				}
+
+				// 「食べない」を選択したら質問4に遷移する
+				else{
+					botui.message.bot({
+						delay: 1000,
+						content: '意外と時間なくて行けないときがあるよね'
+					}).then(select_location_everymonth)
+				}
+			})
+		})
+	}
+
+	function select_location_everymonth(){
+		botui.message.bot({
+			delay: 1000,
+			content: 'じゃあ1か月にどのくらい行く？'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action:[{
+					text: '1日',
+					value: 1
+				},{
+					text: '2日',
+					value: 2
+				},{
+					text: '3日',
+					value: 3
+				},{
+					text: '4日',
+					value: 4
+				},{
+					text: '5日',
+					value: 5
+				},{
+					text: '6日',
+					value: 6
+				},{
+					text: '行かない',
+					value: 0
+				}]
+			}).then(function(res){
+				location_index_count = res.value;
+				// 「はい」，「いいえ」どちらでも質問5に遷移する
+				if(res.value>0){
+					location_index_period = '1か月';
+					period = 30;
+					botui.message.bot({
+						delay: 1000,
+						content: 'そのくらいの頻度で行くのが、特別な感じがしていいよね！'
+					}).then(select_before_sleep_importance)
+				}
+				else{
+					location_index_period = 'たま';
+					location_index_count = 1;
+					period = 180;
+					botui.message.bot({
+						delay: 1000,
+						content: 'なかなか行ったりする時間ってないんだよね'
+					}).then(select_location_importance)
+				}
+			})
+		})
+	}
+
+	function select_location_importance(){
+		botui.message.bot({
+			delay: 1000,
+			content: '質問に答えてくれてありがとう'
+		})
+		if(period>1){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'は、'+location_index_period+'に'+location_index_count+'回'+location_index_name+'に行くことが分かったよ！'
+			})
+		}
+		if(period==1){
+			botui.message.bot({
+				delay: 2000,
+				content: '質問から'+user_name+'は、'+location_index_period+","+location_index_name+'行くことが分かったよ！'
+			})
+		}
+		botui.message.bot({
+			delay: 3000,
+			content: 'じゃあそれは'+user_name+'にとってどのくらい重要なのか1～5段階で教えてほしい'
+		})
+		botui.action.button({
+			delay: 4000,
+			action: [{
+				text: '1',
+				value: 1
+			},{
+				text: '2',
+				value: 2
+			},{
+				text: '3',
+				value: 3
+			},{
+				text: '4',
+				value: 4
+			},{
+				text: '5',
+				value: 5
+			}]
+		}).then(function(res){
+			location_index_importance = res.value
+			if(res.value == 1 || res.value == 2){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはあんまり重要なことじゃないんだ'
+				})
+			}
+			if(res.value == 3 || res.value == 4){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはまあまあ重要なことなんだ'
+				})
+			}
+			if(res.value == 5){
+				botui.message.bot({
+					delay: 1000,
+					content: user_name+'にとってはかなり重要なことなんだね！'
+				})
+			}
+		}).then(select_location_type)
+	}
+
+	function select_location_type(){
+		if(period>1){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+location_index_period+'に'+location_index_count+'回'+location_index_name+'に行くことが次のどれに分類されるかおしえてほしいな'
+			})
+		}
+		if(period==1){
+			botui.message.bot({
+				delay: 1000,
+				content: 'それじゃあ最後に'+user_name+'にとって、'+location_index_period + ","+location_index_name+'に行くことが次のどれに関係しているかおしえてほしいな'
+			})
+		}
+		botui.message.bot({
+			delay: 2500,
+			content: 'もし1つに絞れない時は複数選択して大丈夫だよ！'
+		})
+		botui.action.select({
+			delay: 3500,
+			action: {
+				placeholder : "選択してね", 
+				value :'', // Selected value or selected object. Example: {value: "TR", text : "Türkçe" }
+				searchselect : true, // Default: true, false for standart dropdown
+				label : 'text', // dropdown label variable
+				multipleselect : true, // Default: false
+				options : [
+								{value: "health", text : "身体に関すること" },
+								{value: "mind", text : "感覚に関すること" },
+								{value: "sociality", text : "学び・精神に関すること" },
+								{value: "communication", text : "対人関係に関すること" },
+						],
+				button: {
+				icon: '',
+				label: 'OK'
+				}
+			}
+		}).then(function(res){
+			var category = res.value.split(',');
+
+			category_organize(category,category_box);
+
+			//console.log(category_box)
+			add_routines(location_index_name,period,location_index_count,location_index_importance,category_box);
+			botui.message.bot({
+				delay: 1000,
+				content: 'なるほどね！'
+			})
+			botui.message.bot({
+				delay: 3000,
+				content: user_name+'にとっては'+res.text+'に関係しているんだね！'
+			})
+		}).then(select_another_location)
+	}
+
+	function select_another_location(){
+		if(question_count>3){
+			location_question_end();
+		}
+		else{
+			botui.message.bot({
+				delay: 3000,
+				content: '他にもよく行く場所はある？'
+			}).then(function(){
+				botui.action.button({
+					delay: 1000,
+					action: [{
+						text: 'はい',
+						value: true
+					},{
+						text: 'いいえ',
+						value: false
+					}]
+				}).then(function(res){
+	　　　　　　　　　
+					// 「はい」が選択されたら質問1に戻る
+					if(res.value == true){
+						location_index_name=" ";
+						location_index_period;
+						location_index_count = 1;
+						location_index_importance = 1;
+
+						question_count++;
+						botui.message.bot({
+							delay: 1000,
+							content: 'ホント！'
+						}).then(input_location_question)
+					}
+
+					// 「いいえ」が選択されたら食事に関する質問は終わりにする
+					else{
+						location_question_end();
+					}
+				})
+			})
+		}	
+	}
+
+	function location_question_end(){
+		botui.message.bot({
+			delay: 3000,
+			content: 'じゃあ場所に関しての質問は終わりにするね'
+		})
+		botui.message.bot({
+			delay: 4000,
+			content: 'それじゃあ次の質問のカテゴリーを選んでね！'
+		}).then(select_index_category);
+	}
+///////   入力された単語がWikidata内またはキャッシュに存在した場合の処理   ///////////////////////////
+	function success_word(func){
 		botui.message.update(msgIndex,{
 			content: 'そうなんだ!'
 		}).then(func);
@@ -1333,6 +2147,7 @@ $(function(){
 	}
 	
 	///////  Wikidataにもキャッシュにも入力された単語が存在しなかった場合の処理   //////////////////////////
+	/*
 	function failed_food_word(text,func){
 		botui.message.update(msgIndex,{
 			content: 'それについておいらはよく知らないんだ'
@@ -1359,8 +2174,135 @@ $(function(){
 			}).then(func)
 		})
 	}
+	*/
+    function failed_food_word(text,func){
+		botui.message.update(msgIndex,{
+			content: 'それについておいらはよく知らないんだ'
+		});
+		botui.message.bot({
+			delay:2000,
+			content: '良かったらそれが何なのか僕に教えてほしいな？'
+		})
+		botui.message.bot({
+			delay:3000,
+			content: '次の選択肢からそれが何かを選んでね！'
+		})
+		botui.message.bot({
+			delay:4000,
+			content: 'どれにも当てはまらない時は「適切なものがない」を選んでね'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '食品',
+					value: 'wd:Q2095'
+				},{
+					text: '料理',
+					value: 'wd:Q746549'
+				},{
+					text: '飲み物',
+					value: 'wd:Q40050'
+				},{
+					text: '食材',
+					value: 'wd:Q25403900'
+				},{
+					text: '適切なものがない',
+					value: '適切なものがない'
+				}]
+			}).then(function(res){
+				botui.message.bot({
+					delay:1000,
+					content: '教えてくれてありがとう！'
+				})
+				add_cache(text,res.value)
+			}).then(func)
+		})
+	}
 
+	function failed_action_word(text,func){
+		botui.message.update(msgIndex,{
+			content: 'それについておいらはよく知らないんだ'
+		});
+		botui.message.bot({
+			delay:2000,
+			content: '良かったらそれが何なのか僕に教えてほしいな？'
+		})
+		botui.message.bot({
+			delay:3000,
+			content: '次の選択肢からそれが何かを選んでね！'
+		})
+		botui.message.bot({
+			delay:4000,
+			content: 'どれにも当てはまらない時は「適切なものがない」を選んでね'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '行為',
+					value: 'wd:Q4026292'
+				},{
+					text: '行動',
+					value: 'wd:Q1914636'
+				},{
+					text: 'スポーツ',
+					value: 'wd:Q349'
+				},{
+					text: '遊び',
+					value: 'wd:Q1150958'
+				},{
+					text: '適切なものがない',
+					value: '適切なものがない'
+				}]
+			}).then(function(res){
+				botui.message.bot({
+					delay:1000,
+					content: '教えてくれてありがとう！'
+				})
+				add_cache(text,res.value)
+			}).then(func)
+		})
+	}
 
+	function failed_location_word(text,func){
+		botui.message.update(msgIndex,{
+			content: 'それについておいらはよく知らないんだ'
+		});
+		botui.message.bot({
+			delay:2000,
+			content: '良かったらそれが何なのか僕に教えてほしいな？'
+		})
+		botui.message.bot({
+			delay:3000,
+			content: '次の選択肢からそれが何かを選んでね！'
+		})
+		botui.message.bot({
+			delay:4000,
+			content: 'どれにも当てはまらない時は「適切なものがない」を選んでね'
+		}).then(function(){
+			botui.action.button({
+				delay: 1000,
+				action: [{
+					text: '施設',
+					value: 'wd:Q13226383'
+				},{
+					text: '構造物',
+					value: 'wd:Q811979'
+				},{
+					text: '地形',
+					value: 'wd:Q271669'
+				},{
+					text: '適切なものがない',
+					value: '適切なものがない'
+				}]
+			}).then(function(res){
+				botui.message.bot({
+					delay:1000,
+					content: '教えてくれてありがとう！'
+				})
+				add_cache(text,res.value)
+			}).then(func)
+		})
+	}
 	/////////   ユーザが入力した単語を判別する(関数)　　//////////////////////////////////////
 	function search_word(word,wd,func1,func2,func3,next){
 		find_cache(word).success(function(data){
