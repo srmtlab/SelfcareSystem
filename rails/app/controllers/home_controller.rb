@@ -2,6 +2,7 @@ class HomeController < ApplicationController
     def index
     end
 
+
     def plaza
         user_num = User.count
         selected_routines = []
@@ -94,7 +95,6 @@ class HomeController < ApplicationController
         routines.save
     end
 end
-
 
 # routine_num = Routine.count
 # routine_selected = rand(routine_num) + 1
