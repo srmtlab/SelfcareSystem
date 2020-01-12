@@ -13,7 +13,7 @@
     },
     {
         "who": 0,
-        "talk": "frequency,<br>routine,<br>とかかな。"
+        "talk": "frequency0,<br>routine0,<br>とかかな。"
     },
     {
         "who": -1,
@@ -29,7 +29,7 @@
     },
     {
         "who": 1,
-        "talk": "frequency,<br>routine,<br>とかな。"
+        "talk": "frequency1,<br>routine1,<br>とかな。"
     },
     {
         "who": -1,
@@ -53,7 +53,7 @@
     },
     {
         "who": 2,
-        "talk": "frequency,<br>routine,<br>なんですけど、どうですかね。"
+        "talk": "frequency2,<br>routine2,<br>なんですけど、どうですかね。"
     },
     {
         "who": -1,

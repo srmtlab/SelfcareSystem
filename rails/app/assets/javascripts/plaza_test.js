@@ -31,15 +31,20 @@ $(function () {
     var i_plaza2 = 1;
     var plaza_count = 0;
     swiper.allowTouchMove = false;
-    //指標抽出、画像決定
-    //$(".life_index_left").text(routines[0].text);
-    //$(".life_index_center").text(routines[1].text);
-    //$(".life_index_right").text(routines[2].text);
     avators = ["ニャン太", "クマキチ", "ラビ"];
+    var category_routines = [];
+    var category_routines_nums = [];
+    while (category_routines.length < 6) {
+        var category_routine_index = Math.floor(Math.random() * routines.length);
+        if (category_routines_nums.indexOf(category_routine_index) == -1) {
+            category_routines_nums.push(category_routine_index);
+            var category_routine = routines[category_routine_index];
+            category_routines.push(category_routine);
+        }
+    }
     $(".char_left").attr("src", image_path("imgs/cat/cat_left1.png"));
     $(".char_center").attr("src", image_path("imgs/bear/bear1.png"));
     $(".char_right").attr("src", image_path("imgs/rabbit/rabbit_right1.png"));
-    var category_list = [category_second, category_second, category_second]
     for (var i_c = 0; i_c < user_routines.length; i_c++) {
         var routine_categories = "";
         for (var j = 0; j < user_categories[i_c].length; j++) {
@@ -87,7 +92,7 @@ $(function () {
                 $(".talk").fadeIn(500, function () {
                     $(".fairy").attr("src", image_path("imgs/fairy/fairy_winter1.gif"));
                     $(".talker").attr("src", image_path("imgs/fairy/fairy_winter1.png"));
-                    display_talk(data[0], current_user.name, 0, category_first, category_second, avators);
+                    display_talk(data[0], current_user.name, category_routines, category_first, category_second, avators);
                 });
             });
         });
@@ -310,6 +315,12 @@ $(function () {
             //チェックボックスの固定チェックを外す(選ばれた生活指標カテゴリー)
             $('.checkbox_health').prop('checked', false);
             $('.checkbox_health').prop('disabled', false);
+            $('.checkbox_mind').prop('checked', false);
+            $('.checkbox_mind').prop('disabled', false);
+            $('.checkbox_sociality').prop('checked', false);
+            $('.checkbox_sociality').prop('disabled', false);
+            $('.checkbox_expression').prop('checked', false);
+            $('.checkbox_expression').prop('disabled', false);
 
             $(".btn_attach_forward").addClass("is-disabled");
             $(".plaza").removeClass("test1-on");
@@ -323,6 +334,12 @@ $(function () {
             //チェックボックスの固定チェックを外す(選ばれた生活指標カテゴリー)
             $('.checkbox_health').prop('checked', false);
             $('.checkbox_health').prop('disabled', false);
+            $('.checkbox_mind').prop('checked', false);
+            $('.checkbox_mind').prop('disabled', false);
+            $('.checkbox_sociality').prop('checked', false);
+            $('.checkbox_sociality').prop('disabled', false);
+            $('.checkbox_expression').prop('checked', false);
+            $('.checkbox_expression').prop('disabled', false);
 
             $(".btn_attach_forward").addClass("is-disabled");
             $(".plaza").removeClass("test2-on");
@@ -1170,7 +1187,7 @@ $(function () {
                     //######################################
                     //テンプレート進行
                     //######################################
-                    display_talk(data_plaza[0], current_user.name, 0, category_first, category_second, avators);
+                    display_talk(data_plaza[0], current_user.name, category_routines, category_first, category_second, avators);
                     if (plaza_count == 0) {
                         $(".btn_next_plaza").on("click", function () {
                             if (i_plaza1 < data_plaza.length && plaza_count == 0) {
@@ -1207,7 +1224,7 @@ $(function () {
                                     $(".char_right").attr("src", image_path("imgs/rabbit/rabbit_right2.png"));
                                     $(".talker").attr("src", image_path("imgs/rabbit/rabbit_right1.png"));
                                 }
-                                display_talk(data_plaza[i_plaza1], current_user.name, 0, category_first, category_second, avators);
+                                display_talk(data_plaza[i_plaza1], current_user.name, category_routines, category_first, category_second, avators);
                                 i_plaza1 = i_plaza1 + 1;
                             } else if (i_plaza1 == data_plaza.length && plaza_count == 0) {
                                 plaza_count += 1;
@@ -1229,7 +1246,7 @@ $(function () {
                                     $(".btn_attach_forward").removeClass("is-disabled");
                                 });
                                 data_plaza_next = { "who": -1, "talk": "探す指標カテゴリーはこれ。<br>second_category,<br>よろしくね。" };
-                                display_talk(data_plaza_next, current_user.name, 0, category_first, category_second, avators);
+                                display_talk(data_plaza_next, current_user.name, category_routines, category_first, category_second, avators);
                             }
                         });
                     }
@@ -1240,7 +1257,7 @@ $(function () {
                     //######################################
                     //テンプレート進行
                     //######################################
-                    display_talk(data_plaza[0], current_user.name, 0, category_first, category_second, avators);
+                    display_talk(data_plaza[0], current_user.name, category_routines, category_first, category_second, avators);
                     if (plaza_count == 1) {
                         $(".btn_next_plaza").on("click", function () {
                             if (i_plaza2 < data_plaza.length && plaza_count == 1) {
@@ -1277,7 +1294,7 @@ $(function () {
                                     $(".char_right").attr("src", image_path("imgs/rabbit/rabbit_right2.png"));
                                     $(".talker").attr("src", image_path("imgs/rabbit/rabbit_right1.png"));
                                 }
-                                display_talk(data_plaza[i_plaza2], current_user.name, 0, category_first, category_second, avators);
+                                display_talk(data_plaza[i_plaza2], current_user.name, category_routines, category_first, category_second, avators);
                                 i_plaza2 = i_plaza2 + 1;
                             } else if (i_plaza2 == data_plaza.length && plaza_count == 1) {
                                 plaza_count += 1;
@@ -1299,7 +1316,7 @@ $(function () {
                                     $(".btn_attach_forward").removeClass("is-disabled");
                                 });
                                 data_plaza_next = { "who": -1, "talk": "探す指標カテゴリーはこれ。<br>second_category,<br>よろしくね。" };
-                                display_talk(data_plaza_next, current_user.name, 0, category_first, category_second, avators);
+                                display_talk(data_plaza_next, current_user.name, category_routines, category_first, category_second, avators);
                             }
                         });
                     }
@@ -1326,19 +1343,19 @@ $(function () {
         //履歴に追加する
         if (data.who < 0) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">プラザ</p>");
-            talking = replace_talk(current_user_name, talking, category_first, category_second);
+            talking = replace_talk(current_user_name, talking, category_routines, category_first, category_second);
             $(".talk_who").text("プラザ");
         } else if (data.who == 0) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[0] + "</p>");
-            talking = replace_talk(current_user_name, talking, category_first, category_second);
+            talking = replace_talk(current_user_name, talking, category_routines, category_first, category_second);
             $(".talk_who").text(avators[0]);
         } else if (data.who == 1) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[1] + "</p>");
-            talking = replace_talk(current_user_name, talking, category_first, category_second);
+            talking = replace_talk(current_user_name, talking, category_routines, category_first, category_second);
             $(".talk_who").text(avators[1]);
         } else if (data.who == 2) {
             $(".talk_history_list").append("<p class=\"talk_history_who\">" + avators[2] + "</p>");
-            talking = replace_talk(current_user_name, talking, category_first, category_second);
+            talking = replace_talk(current_user_name, talking, category_routines, category_first, category_second);
             $(".talk_who").text(avators[2]);
         }
         $(".talk_history_list").append("<p" + talking + "</p>");
@@ -1420,7 +1437,7 @@ $(function () {
     //######################################
     //キャラクターの話の中で現れるname,とlife_index,をキャラの名前、指標に置換する
     //######################################
-    function replace_talk(current_user_name, template_talk, category_first, category_second) {
+    function replace_talk(current_user_name, template_talk, category_routines, category_first, category_second) {
         var talking = template_talk;
         var category_name = "";
         //var avator_routine = routine.text;
@@ -1431,6 +1448,36 @@ $(function () {
         //ユーザの名前: current_user,
         if (talking.indexOf("current_user,") != -1) {
             talking = talking.replace("current_user,", "「" + current_user_name + "」");
+        }
+        //指標名、頻度を返す
+        if (talking.indexOf("frequency0,") != -1) {
+            var index = plaza_count * 3;
+            var str_frequency = make_routine_frequency(category_routines[index].period, category_routines[index].count);
+            talking = talking.replace("frequency0,", "「" + str_frequency + "」");
+            replace_check = true;
+        } else if (talking.indexOf("frequency1,") != -1) {
+            var index = plaza_count * 3 + 1;
+            var str_frequency = make_routine_frequency(category_routines[index].period, category_routines[index].count);
+            talking = talking.replace("frequency1,", "「" + str_frequency + "」");
+            replace_check = true;
+        } else if (talking.indexOf("frequency2,") != -1) {
+            var index = plaza_count * 3 + 2;
+            var str_frequency = make_routine_frequency(category_routines[index].period, category_routines[index].count);
+            talking = talking.replace("frequency2,", "「" + str_frequency + "」");
+            replace_check = true;
+        }
+        if (talking.indexOf("routine0,") != -1) {
+            var index = plaza_count * 3;
+            talking = talking.replace("routine0,", "「" + category_routines[index].text + "」");
+            replace_check = true;
+        } else if (talking.indexOf("routine1,") != -1) {
+            var index = plaza_count * 3 + 1;
+            talking = talking.replace("routine1,", "「" + category_routines[index].text + "」");
+            replace_check = true;
+        } else if (talking.indexOf("routine2,") != -1) {
+            var index = plaza_count * 3 + 2;
+            talking = talking.replace("routine2,", "「" + category_routines[index].text + "」");
+            replace_check = true;
         }
         //評価実験用カテゴリー2種: category_first,/category_second,
         if (talking.indexOf("first_category,") != -1) {
@@ -1447,6 +1494,24 @@ $(function () {
         } else {
             return ">" + talking;
         }
+    }
+
+    //######################################
+    //指標の周期と回数から頻度を生成 ########
+    //######################################
+    function make_routine_frequency(period, count) {
+        var str = "";
+        if (period == 1) {
+            str = str + "1日に";
+        } else if (period == 7) {
+            str = str + "1週間に";
+        } else if (period == 30) {
+            str = str + "1か月に";
+        } else if (period == 365) {
+            str = str + "1年に";
+        }
+        str = str + count + "回";
+        return str;
     }
 
     //######################################
@@ -1509,11 +1574,5 @@ $(function () {
             $(".checkbox_sociality").prop("checked", false);
         }
     }
-
-
-    $(".checkbox_health").prop("checked", false);
-    $(".checkbox_mind").prop("checked", false);
-    $(".checkbox_sociality").prop("checked", false);
-    $(".checkbox_expression").prop("checked", false);
 
 });

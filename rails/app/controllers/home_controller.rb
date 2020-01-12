@@ -250,11 +250,34 @@ class HomeController < ApplicationController
     def routines_test2
         i_category = 0
         category_box = []
+        category_log = []
         for category in params[:categories] do
             if category == "true" then
                 category_box.push(Category.all[i_category])
+                category_log.push(Category.all[i_category].name)
             end
             i_category += 1
+        end
+
+        referenced_category = ""
+        if params[:referenced_category] == 0 then
+            referenced_category = "health,"
+        elsif params[:referenced_category] == 1 then
+            referenced_category = "mind,"
+        elsif params[:referenced_category] == 2 then
+            referenced_category = "sociality,"
+        elsif params[:referenced_category] == 3 then
+            referenced_category = "self_expression,"
+        end
+
+        i_category_name = 0
+        for name in category_log do
+            if i_category_name < category_log.length - 1 then
+                referenced_category = referenced_category + name + ","
+            else
+                referenced_category = referenced_category + name
+            end
+            i_category_name += 1
         end
 
         cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
@@ -276,6 +299,10 @@ class HomeController < ApplicationController
         if routine.save then
             # TODO: ここに関連（元の情報と新しく作成した情報の間の関連）の情報のログを何らかの形式（json, csv, tsv）でファイルに保存するプログラムを書く
             # 参考 : http://crude503.hatenablog.com/entry/2018/03/02/110243
+            # File.open("/log.csv", "a") do |f|
+            #     f.puts(referenced_category)
+            # end
+
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
     end
