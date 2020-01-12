@@ -379,6 +379,156 @@ body {
       }
     }
     /* ########################################################## */
+    /* ヘルプ部分 */
+    /* ########################################################## */
+    .nes-container.is-rounded.test_help {
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      width: 322px;
+      height: 577px;
+      padding: 10px 10px;
+      z-index: 20;
+      opacity: 0.95;
+      visibility: hidden;
+
+      .btn_help_close {
+        position: absolute;
+        text-align: center;
+        top: 5px;
+        left: 220px;
+        width: 80px;
+        z-index: 25;
+      }
+      .help_list {
+        width: 290px;
+        height: 500px;
+        padding: 10px 10px;
+        margin: 50px auto 0;
+        display: block;
+        overflow: scroll;
+
+        .help_title {
+          color: yellowgreen;
+          text-align: center;
+        }
+        .help_category {
+          color: red;
+        }
+      }
+    }
+    /* ########################################################## */
+    /* ユーザの生活指標表示部分 */
+    /* ########################################################## */
+    .nes-container.is-rounded.test_user_routines {
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      width: 322px;
+      height: 577px;
+      padding: 10px 10px;
+      z-index: 20;
+      opacity: 0.95;
+      visibility: hidden;
+
+      .btn_routines_close {
+        position: absolute;
+        text-align: center;
+        top: 5px;
+        left: 220px;
+        width: 80px;
+        z-index: 25;
+      }
+      .routines_list {
+        width: 290px;
+        height: 500px;
+        padding: 10px 10px;
+        margin: 50px auto 0;
+        display: block;
+        overflow: scroll;
+
+        .routines_title {
+          color: yellowgreen;
+          text-align: center;
+        }
+        .routines_routine {
+          color: red;
+        }
+      }
+    }
+    /* ########################################################## */
+    /* 実験:チュートリアル部分 */
+    /* ########################################################## */
+    .nes-container.is-rounded.test_tutorial1 {
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      width: 322px;
+      height: 577px;
+      padding: 10px 10px;
+      z-index: 20;
+      opacity: 0.95;
+      visibility: hidden;
+
+      .btn_tutorial1_close {
+        position: absolute;
+        text-align: center;
+        top: 500px;
+        left: 95px;
+        width: 120px;
+        z-index: 25;
+      }
+      .tutorial_list {
+        width: 290px;
+        height: 480px;
+        padding: 10px 10px;
+        margin: 0 auto;
+        display: block;
+        overflow: scroll;
+
+        .tutorial_title {
+          color: yellowgreen;
+          text-align: center;
+        }
+      }
+    }
+    .nes-container.is-rounded.test_tutorial2 {
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      width: 322px;
+      height: 577px;
+      padding: 10px 10px;
+      z-index: 20;
+      opacity: 0.95;
+      visibility: hidden;
+
+      .btn_tutorial2_close {
+        position: absolute;
+        text-align: center;
+        top: 500px;
+        left: 95px;
+        width: 120px;
+        z-index: 25;
+      }
+      .tutorial_list {
+        width: 290px;
+        height: 480px;
+        padding: 10px 10px;
+        margin: 0 auto;
+        display: block;
+        overflow: scroll;
+
+        .tutorial_title {
+          color: yellowgreen;
+          text-align: center;
+        }
+        .tutorial_text_ex {
+          color: red;
+        }
+      }
+    }
+    /* ########################################################## */
     /* 入力フォーム */
     /* ########################################################## */
     .nes-container.is-rounded.form {
@@ -486,6 +636,22 @@ body {
     /* ########################################################## */
     /* Yes/No, history/nextボタン */
     /* ########################################################## */
+    .btn_enter {
+      position: absolute;
+      top: 470px;
+      left: 95px;
+      width: 150px;
+      z-index: 10;
+      display: none;
+    }
+    .btn_plaza {
+      position: absolute;
+      top: 380px;
+      left: 205px;
+      width: 125px;
+      z-index: 10;
+      display: none;
+    }
     .btn_yes {
       position: absolute;
       top: 470px;
@@ -510,7 +676,31 @@ body {
       z-index: 10;
       display: none;
     }
+    .btn_routines {
+      position: absolute;
+      top: 530px;
+      left: 120px;
+      width: 98px;
+      z-index: 10;
+      display: none;
+    }
+    .btn_help {
+      position: absolute;
+      top: 530px;
+      left: 229px;
+      width: 98px;
+      z-index: 10;
+      display: none;
+    }
     .btn_next {
+      position: absolute;
+      top: 530px;
+      left: 177px;
+      width: 150px;
+      z-index: 10;
+      display: none;
+    }
+    .btn_next_plaza {
       position: absolute;
       top: 530px;
       left: 177px;

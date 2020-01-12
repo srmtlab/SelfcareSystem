@@ -534,6 +534,8 @@ $(function () {
                 talking = talking + "「1週間に" + user_count + "回」だよ。";
             } else if (user_period == 30) {
                 talking = talking + "「1か月に" + user_count + "回」だよ。";
+            } else if (user_period == 365) {
+                talking = talking + "「1年に" + user_count + "回」だよ。";
             }
             replace_check = true;
         }
