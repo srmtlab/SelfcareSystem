@@ -1,4 +1,7 @@
 <%= javascript_include_tag "questions.js" %>
+<%= javascript_tag do %> 
+	var current_user = <%= raw current_user.to_json %>;
+<% end %>
 <div id = "question">                
     <!-- 外枠、画面 -->
 <div class="frame">

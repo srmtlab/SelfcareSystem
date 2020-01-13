@@ -38,7 +38,7 @@ $(function(){
 
 	var botui = new BotUI('hello-world');
 	var char_name = "タロウ";
-	var user_name = 'ようた';
+	var user_name = current_user.name;
 	var question_count = 1;
 	var finish_question_count =0;
 	var period = 1;
@@ -96,7 +96,7 @@ $(function(){
 			category_box[2]='true'
 			console.log(2)
 		}
-		else if(category=='communication'){
+		else if(category=='self_expression'){
 			category_box[3]='true'
 			console.log(3)
 		}
@@ -483,11 +483,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);
@@ -927,11 +927,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);
@@ -1341,11 +1341,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);
@@ -1767,11 +1767,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);
@@ -2187,11 +2187,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);
@@ -2571,11 +2571,11 @@ $(function(){
 				text: '感覚に関すること',
 				value: 'mind'
 			},{
-				text: '学び・精神に関すること',
+				text: '対人関係に関すること',
 				value: 'sociality'
 			},{
-				text: '対人関係に関すること',
-				value: 'communication'
+				text: '学び・精神に関すること',
+				value: 'self_expression'
 			}]
 		}).then(function(res){
 			test(res.value,category_box);

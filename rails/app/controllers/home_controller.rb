@@ -2,7 +2,6 @@ class HomeController < ApplicationController
     def index
     end
 
-
     def plaza
         user_num = User.count
         selected_routines = []
