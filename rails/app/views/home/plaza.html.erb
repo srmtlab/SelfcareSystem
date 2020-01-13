@@ -1,12 +1,17 @@
-<%= javascript_include_tag "plaza.js" %>
+<%= javascript_include_tag "plaza_test.js" %>
+<!-- 以下は被験者実験用のソースコードです -->
+<!-- <%= javascript_include_tag "plaza_test.js" %> -->
+
 <%= javascript_tag do %>
-    var routines = <%= raw @routines_selected.to_json %>;
-    var avator_left = <%= raw @routines_selected[0].user.avators[0].to_json %>;
-    var avator_center = <%= raw @routines_selected[1].user.avators[0].to_json %>;
-    var avator_right = <%= raw @routines_selected[2].user.avators[0].to_json %>;
+    var current_user = <%= raw current_user.to_json %>;
+    var category_first = <%= raw @category_first %>;
+    var category_second = <%= raw @category_second %>;
+    var routines = <%= raw @selected_routines.to_json %>;
+    var user_routines = <%= raw @user_routines.to_json %>;
+    var user_categories = <%= raw @user_categories.to_json %>;
 <% end %>
 <div class="swiper-container">
-    <div class="swiper-wrapper plaza form1-off form2-off">
+    <div class="swiper-wrapper plaza answer-off">
         <!-- 左ページ -->
         <div class="swiper-slide plaza_container1">
             <div class="char_container1">
@@ -69,11 +74,130 @@
     </div>
     <button type="button" class="nes-btn btn_history_start">始める</button>
 </div>
-<!-- 入力フォーム & Yes/Noボタン & 履歴/次へボタン -->
-<div class="nes-field answer">
-	<input type="text" id="name_field" class="nes-input answer_text" placeholder="ここに解答を入力してね">
+<!-- ヘルプ -->
+<div class="nes-container is-rounded test_help">
+    <button type="button" class="nes-btn btn_help_close">閉じる</button>
+    <div class="help_list">
+        <p class="help_title">生活指標のカテゴリー</p>
+        <p class="help_category">身体</p>
+        <p class="help_text">五感(視覚/聴覚/嗅覚/味覚/触覚):<br>感覚の過敏さ・鈍感さ</p>
+        <p class="help_text">体質:身体に現れる症状や持病、<br>加齢による変化</p>
+        <p class="help_text">パーソナルスペース:<br>自分の安心できるテリトリーの範囲</p>
+        <p class="help_text">性:性の一致・不一致</p>
+        <p class="help_text">食事・栄養・料理の可否</p>
+        <p class="help_text">睡眠:体質に合った睡眠時間や<br>眠る環境</p>
+        <p class="help_text">運動:体を動かすこと・スポーツ</p>
+        <p class="help_text">かかりつけ医と服薬</p>
+        <p class="help_text">依存:アルコール/ギャンブル/ゲーム<br>/ドラッグ/ネット/性依存症などの有無</p>
+        <p class="help_text">自分のボディイメージと<br>ファッション</p>
+        <p class="help_text">居住環境:<br>住まいと住まい周辺の<br>地域資源の活用</p>
+        <p class="help_category">感覚</p>
+        <p class="help_text">認知:<br>心にまつわる考え方のクセや価値観</p>
+        <p class="help_text">感情:喜怒哀楽と<br>感情のコントロール</p>
+        <p class="help_text">障害・疾患:自分の症状に対する<br>理解度と具体的な対処方法</p>
+        <p class="help_text">恋愛:考え方や捉え方・恋愛体験</p>
+        <p class="help_text">死:考え方や捉え方・<br>身近な人を亡くした時の体験</p>
+        <p class="help_text">自分のコンプレックスとの<br>付き合い方</p>
+        <p class="help_category">対人関係</p>
+        <p class="help_text">親、きょうだいとの関わり/<br>子ども（娘や息子）との関わり</p>
+        <p class="help_text">友人との関わり</p>
+        <p class="help_text">職場の上司や同僚との関わり</p>
+        <p class="help_text">配偶者（パートナー）との関わり</p>
+        <p class="help_text">亡くなった人との付き合い方</p>
+        <p class="help_category">学び/精神</p>
+        <p class="help_text">言語・非言語の<br>コミュニケーションの使い分け</p>
+        <p class="help_text">読むこと・書くこと</p>
+        <p class="help_text">聞くこと・話すこと</p>
+        <p class="help_text">対話の種類(会話/対話/議論/討論)と<br>状況に応じた使い分け</p>
+        <p class="help_text">音楽/美術/スポーツ/文芸/アニメ/<br>漫画/ゲーム/芸能など、自分を表現<br>するためにさまざまな表現スキル<br>を持っているか</p>
+        <p class="help_text">宗教的価値観、宗教的行動</p>
+    </div>
 </div>
+<!-- ユーザの生活指標リスト -->
+<div class="nes-container is-rounded test_user_routines">
+    <button type="button" class="nes-btn btn_routines_close">閉じる</button>
+    <div class="routines_list">
+        <p class="routines_title">あなたの生活指標</p>
+        <!-- <p class="routines_text">指標名(身体、学び/精神)</p> -->
+    </div>
+</div>
+<!-- チュートリアル1 -->
+<div class="nes-container is-rounded test_tutorial1">
+    <button type="button" class="nes-btn btn_tutorial1_close">実験スタート</button>
+    <div class="tutorial_list">
+        <p class="tutorial_title">実験1:チュートリアル</p>
+        <p class="tutorial_text">いまから君には生活指標を<br>探してもらうよ。</p>
+        <p class="tutorial_text">思いついた生活指標が<br>あったら、入力ボタンを<br>押して入力してね。</p>
+        <p class="tutorial_text">ヘルプボタン:<br>生活指標のカテゴリーの一覧<br>(画面右下)</p>
+        <p class="tutorial_text">履歴ボタン:<br>今までの会話の履歴<br>(画面左下)</p>
+        <p class="tutorial_text">進むボタン:<br>実験1を終了する<br>(画面右上)</p>
+    </div>
+</div>
+<!-- チュートリアル2 -->
+<div class="nes-container is-rounded test_tutorial2">
+    <button type="button" class="nes-btn btn_tutorial2_close">実験スタート</button>
+    <div class="tutorial_list">
+        <p class="tutorial_title">実験2:チュートリアル</p>
+        <p class="tutorial_text">いまから君には生活指標を<br>探してもらうよ。</p>
+        <p class="tutorial_text">思いついた生活指標が<br>あったら、入力ボタンを<br>押して入力してね。</p>
+        <p class="tutorial_text_ex">意見参考ボタン:<br>キャラクターが話し合いをして、<br>生活指標を思い出すときに<br>参考になるような意見を<br>話してくれるかも？<br>(意見参考ボタンの<br>利用上限は2回です。<br>使い切らないと終われないから、<br>注意してね。)</p>
+        <p class="tutorial_text">ヘルプボタン:<br>生活指標のカテゴリーの一覧<br>(画面右下)</p>
+        <p class="tutorial_text">履歴ボタン:<br>今までの会話の履歴<br>(画面左下)</p>
+        <p class="tutorial_text">進むボタン:<br>実験2を終了する<br>(画面右上)</p>
+    </div>
+</div>
+<!-- 入力フォーム -->
+<div class="nes-container is-rounded form">
+    <div class="nes-field answer_text_container">
+	    <input type="text" id="name_field" class="nes-input answer_text" placeholder="生活指標を単語で入力してね">
+    </div>
+    <div class="answer_frequency_container">
+        <div class="nes-select answer_frequency1">
+            <select class="answer_frequency_period">
+                <option value="0" disabled selected hidden>頻度</option>
+                <option value="1">日</option>
+                <option value="2">週</option>
+                <option value="3">月</option>
+                <option value="4">年</option>
+            </select>
+        </div>
+        <p>に</p>
+        <div class="nes-select answer_frequency2">
+            <select class="answer_frequency_count">
+                <option value="0" disabled selected hidden>回数</option>
+            </select>
+        </div>
+        <p>回</p>
+    </div>
+    <div class="answer_category_container">
+        <label class="answer_category_health">
+            <input type="checkbox" name="checkbox_health" class="nes-checkbox checkbox_health" value="身体"/>
+            <span>身体</span>
+        </label>
+        <label class="answer_category_mind">
+            <input type="checkbox" name="checkbox_mind" class="nes-checkbox checkbox_mind" value="感覚"/>
+            <span>感覚</span>
+        </label>
+        <label class="answer_category_sociality">
+            <input type="checkbox" name="checkbox_sociality" class="nes-checkbox checkbox_sociality" value="対人関係"/>
+            <span>対人関係</span>
+        </label>
+        <label class="answer_category_expression">
+            <input type="checkbox" name="checkbox_expression" class="nes-checkbox checkbox_expression" value="学び/精神"/>
+            <span>学び/精神</span>
+        </label>
+    </div>
+    <button type="button" class="nes-btn btn_submit">決定</button>
+    <button type="button" class="nes-btn btn_cancel">キャンセル</button>
+    <div class="answer_routine"></div>
+</div>
+<!-- Yes/Noボタン & 履歴/次へボタン -->
+<button type="button" class="nes-btn btn_enter">入力</button>
+<button type="button" class="nes-btn btn_plaza">意見参考</button>
 <button type="button" class="nes-btn btn_yes">はい</button>
 <button type="button" class="nes-btn btn_no">いいえ</button>
 <button type="button" class="nes-btn btn_history">履歴</button>
+<button type="button" class="nes-btn btn_routines">MyRoutine</button>
+<button type="button" class="nes-btn btn_help">ヘルプ</button>
 <button type="button" class="nes-btn btn_next">次へ</button>
+<button type="button" class="nes-btn btn_next_plaza">次へ</button>
