@@ -26,6 +26,7 @@ $(function () {
     //######################################
     //広場画面事前準備
     //######################################
+    var referenced_routine_index = -1;
     var i = 1;
     var i_plaza1 = 1;
     var i_plaza2 = 1;
@@ -696,7 +697,8 @@ $(function () {
                     "routine_text": answer_text,
                     "routine_period": answer_period,
                     "routine_count": answer_count,
-                    "categories": answer_category
+                    "categories": answer_category,
+                    "referenced_category": category_first
                 }
             })
                 // Ajaxリクエストが成功した時発動
@@ -792,13 +794,14 @@ $(function () {
 
             //入力指標の最終確認をした後に決定ボタン
             $.ajax({
-                url: '/plaza/routines_test1',
+                url: '/plaza/routines_test2_1',
                 type: 'POST',
                 data: {
                     "routine_text": answer_text,
                     "routine_period": answer_period,
                     "routine_count": answer_count,
-                    "categories": answer_category
+                    "categories": answer_category,
+                    "referenced_category": category_second
                 }
             })
                 // Ajaxリクエストが成功した時発動
@@ -897,13 +900,14 @@ $(function () {
 
             //入力指標の最終確認をした後に決定ボタン
             $.ajax({
-                url: '/plaza/routines_test2',
+                url: '/plaza/routines_test2_2',
                 type: 'POST',
                 data: {
                     "routine_text": answer_text,
                     "routine_period": answer_period,
                     "routine_count": answer_count,
                     "categories": answer_category,
+                    "referenced_routine_text": category_routines[referenced_routine_index].text,
                     "referenced_category": category_second
                 }
             })
@@ -1394,6 +1398,7 @@ $(function () {
             $(".btn_next").prop("disabled", false);
         }
         if (data.who == -5) {
+            referenced_routine_index = referenced_routine_index + 1;
             $(".btn_yes").prop("disabled", true);
             $(".btn_no").prop("disabled", true);
             $(".btn_next_plaza").fadeOut(500);

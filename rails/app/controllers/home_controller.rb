@@ -216,11 +216,24 @@ class HomeController < ApplicationController
     def routines_test1
         i_category = 0
         category_box = []
+        category_index = []
         for category in params[:categories] do
             if category == "true" then
                 category_box.push(Category.all[i_category])
+                category_index.push(i_category.to_s)
             end
             i_category += 1
+        end
+
+        i_categories = 0
+        categories_index = ""
+        for index in category_index do
+            if i_categories < category_index.length - 1 then
+                categories_index = categories_index + index + ","
+            elsif i_categories == category_index.length - 1 then
+                categories_index = categories_index + index
+            end
+            i_categories += 1
         end
 
         cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
@@ -240,6 +253,9 @@ class HomeController < ApplicationController
             cache: cache_find
         )
         if routine.save then
+            f = File.open('log.txt', 'a')
+            f.puts("," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
     end
@@ -247,37 +263,27 @@ class HomeController < ApplicationController
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     # 広場画面で入力されたルーティーンをデータベースに登録する(評価実験2用)
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    def routines_test2
+    def routines_test2_1
         i_category = 0
         category_box = []
-        category_log = []
+        category_index = []
         for category in params[:categories] do
             if category == "true" then
                 category_box.push(Category.all[i_category])
-                category_log.push(Category.all[i_category].name)
+                category_index.push(i_category.to_s)
             end
             i_category += 1
         end
 
-        referenced_category = ""
-        if params[:referenced_category] == 0 then
-            referenced_category = "health,"
-        elsif params[:referenced_category] == 1 then
-            referenced_category = "mind,"
-        elsif params[:referenced_category] == 2 then
-            referenced_category = "sociality,"
-        elsif params[:referenced_category] == 3 then
-            referenced_category = "self_expression,"
-        end
-
-        i_category_name = 0
-        for name in category_log do
-            if i_category_name < category_log.length - 1 then
-                referenced_category = referenced_category + name + ","
-            else
-                referenced_category = referenced_category + name
+        i_categories = 0
+        categories_index = ""
+        for index in category_index do
+            if i_categories < category_index.length - 1 then
+                categories_index = categories_index + index + ","
+            elsif i_categories == category_index.length - 1 then
+                categories_index = categories_index + index
             end
-            i_category_name += 1
+            i_categories += 1
         end
 
         cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
@@ -297,12 +303,59 @@ class HomeController < ApplicationController
             cache: cache_find
         )
         if routine.save then
-            # TODO: ここに関連（元の情報と新しく作成した情報の間の関連）の情報のログを何らかの形式（json, csv, tsv）でファイルに保存するプログラムを書く
-            # 参考 : http://crude503.hatenablog.com/entry/2018/03/02/110243
-            # File.open("/log.csv", "a") do |f|
-            #     f.puts(referenced_category)
-            # end
+            f = File.open('log.txt', 'a')
+            f.puts("," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.close
+            render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
+        end
+    end
 
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # 広場画面で入力されたルーティーンをデータベースに登録する(評価実験2-plaza用)
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    def routines_test2_2
+        i_category = 0
+        category_box = []
+        category_index = []
+        for category in params[:categories] do
+            if category == "true" then
+                category_box.push(Category.all[i_category])
+                category_index.push(i_category.to_s)
+            end
+            i_category += 1
+        end
+
+        i_categories = 0
+        categories_index = ""
+        for index in category_index do
+            if i_categories < category_index.length - 1 then
+                categories_index = categories_index + index + ","
+            elsif i_categories == category_index.length - 1 then
+                categories_index = categories_index + index
+            end
+            i_categories += 1
+        end
+
+        cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
+        if !cache_find then
+            cache = Cache.new(
+                label: params[:routine_text]
+            )
+            cache.save
+            cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
+        end
+        routine = Routine.new(
+            user_id: current_user.id,
+            text: params[:routine_text],
+            period: params[:routine_period],
+            count: params[:routine_count],
+            categories: category_box,
+            cache: cache_find
+        )
+        if routine.save then
+            f = File.open('log.txt', 'a')
+            f.puts(params[:referenced_routine_text] + "," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
     end
@@ -329,3 +382,27 @@ end
 # User.all[0].name : Userテーブルの中で一番idが小さいユーザの名前
 # table名.count : 選択テーブルのデータ数
 # table名.find(num) : 選択テーブルの中のidがnumのものを参照
+
+# ・ファイル操作(txt)
+#########################################
+# f = File.open('sample.txt', 'w')
+# f.puts("Hello world!")
+# f.close
+#########################################
+# 上記のプログラムを実行するとrailsディレクトリ下にsample.txtが追加される。
+# ・ファイル操作(csv)
+#########################################
+# require "csv"
+# f = CSV.open('test.csv','w')
+#   f.puts ["A","B","C"]
+#   f.puts ["milk","coffee","water"]
+# f.close
+#########################################
+# 上記のプログラムを実行するとrailsディレクトリ下にtest.csvが追加される。
+# ・ファイル操作(int→str)
+#########################################
+# f = File.open('log.txt', 'a')
+# f.puts("," + 0.to_s + "=>" + "夢" + "," + "0,1,2")
+# f.close
+#########################################
+# 上記のプログラムを実行するとrailsディレクトリ下のlog.txtに文字列が追加される。
