@@ -83,24 +83,18 @@ $(function(){
 	
 
 	function test(category,category_box){
-		console.log(category)
 		if(category=='health'){
 			category_box[0]='true'
-			console.log(0)
 		}
 		else if(category=='mind'){
 			category_box[1]='true'
-			console.log(1)
 		}
 		else if(category=='sociality'){
 			category_box[2]='true'
-			console.log(2)
 		}
 		else if(category=='self_expression'){
 			category_box[3]='true'
-			console.log(3)
 		}
-		console.log(category_box)
 	}
 
 	//////////////////// 質問に入る前の会話の流れ　/////////////////////////////////////////////////////////
@@ -133,7 +127,6 @@ $(function(){
 				value: 'いいよ'
 			}]
 		}).then(function(res){
-			//test(category_box,category_boxs)
 			botui.message.bot({
 				delay:1000,
 				content:'ありがとう！'
@@ -2648,34 +2641,6 @@ $(function(){
 	}
 	
 	///////  Wikidataにもキャッシュにも入力された単語が存在しなかった場合の処理   //////////////////////////
-	/*
-	function failed_food_word(text,func){
-		botui.message.update(msgIndex,{
-			content: 'それについておいらはよく知らないんだ'
-		});
-		botui.message.bot({
-			delay:2000,
-			content: '良かったらそれが何なのか僕に教えてくれないか？'
-		}).then(function(){
-			botui.action.text({
-				delay:1000,
-				action:{
-					placeholder: '入力してね！'
-				}
-			}).then(function(res){
-				exist_subclass(res.value).success(function(data){
-					if(data.results.bindings.length>0){
-						var cache_wd = 'wd:'+data.results.bindings[0].a["value"].split('/')[4]
-						add_cache(text,cache_wd)
-					}
-					else{
-						add_cache(text,res.value)
-					}
-				})
-			}).then(func)
-		})
-	}
-	*/
     function failed_food_word(text,func){
 		botui.message.update(msgIndex,{
 			content: 'それについておいらはよく知らないんだ'
@@ -2824,7 +2789,6 @@ $(function(){
 			}
 			else{
 				search_subclass(word,wd).success(function(data){
-					//console.log(data.results.bindings[0].b["value"])
 					if(data.results.bindings.length>0){
 						func1(next);
 						func3(word,wd);
