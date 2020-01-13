@@ -9,15 +9,15 @@
     },
     {
         "who": 0,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": 1,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": 2,
-        "talk": "「name,」だよ。<br>よろしくね。"
+        "talk": "name,だよ。<br>よろしくね。"
     },
     {
         "who": -1,
@@ -41,7 +41,11 @@
     },
     {
         "who": 2,
-        "talk": "ぼくは「life_index,"
+        "talk": "ぼくは<br>life_index,"
+    },
+    {
+        "who": 2,
+        "talk": "これをすると<br>category,につながるんだ。"
     },
     {
         "who": -1,
@@ -49,11 +53,19 @@
     },
     {
         "who": 0,
-        "talk": "えーと、ぼくは「life_index,"
+        "talk": "えーと、ぼくは<br>life_index,"
+    },
+    {
+        "who": 0,
+        "talk": "これが<br>category,になると思う。"
     },
     {
         "who": 1,
-        "talk": "ぼくは「life_index,"
+        "talk": "ぼくは<br>life_index,"
+    },
+    {
+        "who": 1,
+        "talk": "これのおかげで<br>category,ができるね。"
     },
     {
         "who": -1,
@@ -62,6 +74,14 @@
     {
         "who": -1,
         "talk": "教えてくれてどうもありがとう。"
+    },
+    {
+        "who": -1,
+        "talk": "ところで<br>current_user,<br>に質問があるんだけど。"
+    },
+    {
+        "who": -2,
+        "talk": "みんなの話を聞いて、そういえば<br>こんな指標あったなって<br>思い出したものってあったかな？"
     },
     {
         "who": -1,
