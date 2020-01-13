@@ -2,18 +2,12 @@
 <%= javascript_tag do %> 
 	var current_user = <%= raw current_user.to_json %>;
 <% end %>
-<div id = "question">                
-    <!-- 外枠、画面 -->
-<div class="frame">
-					<div class="nes-container is-rounded">
-							<div class="botui-app-container1" id="hello-world">
-									<bot-ui></bot-ui>
-							</div>
-					</div>
-					<div class ="charactor ">
-					        <%= image_tag "imgs/bear/bear1.png", class: "bear" %>
-							
-					</div>
-					
-			　</div>
+
+<div class="nes-container is-rounded botui_container">
+	<div class="botui-app-container1" id="hello-world">
+		<bot-ui></bot-ui>
+	</div>
 </div>
+<div class ="charactor ">
+	<%= image_tag "imgs/bear/bear1.png", class: "bear" %>					
+</div>				
