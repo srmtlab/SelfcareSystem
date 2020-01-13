@@ -367,7 +367,47 @@ class HomeController < ApplicationController
         # TODO strong paramsを参考にして書き換えたりとかする
         # 神谷先輩が書いた　何のためにあるのか分からない...
     end
+
+    def register
+        routine = Cache.select('id, label, wd_type').find_by(label: params['text'])
+        if routine
+            render :json => {id: routine.id, label: routine.label, wd_type: routine.wd_type}
+        else
+            render :json => {label: "ないよ", wd_type: "知らない"}
+        end
+    end
+
+    def addCache
+        cache = Cache.new(
+            label: params['text'],
+            wd_type: params['wd_type']
+            )
+        cache.save
+    end
+
+    def addRoutines
+        cache = Cache.select('id, label, wd_type').find_by(label: params['text'])
+        i_category = 0
+        category_box = []
+        for category in params['category'] do
+            if category == "true" then
+                category_box.push(Category.all[i_category])
+            end
+            i_category += 1
+        end
+        
+        routines = Routine.new(
+            user_id: current_user.id,
+            text: params['text'],
+            period: params['period'],
+            count: params['count'],
+            importance: params['importance'],
+            cache: cache,
+            categories: category_box)
+        routines.save
+    end
 end
+
 # routine_num = Routine.count
 # routine_selected = rand(routine_num) + 1
 # @routine1 = Routine.find(routine_selected)

@@ -15,5 +15,9 @@ Rails.application.routes.draw do
     :registrations => 'users/registrations',
     :sessions => 'users/sessions'   
   } 
+  get 'question', to: 'home#Question'
+  post "question/register", to: "home#register"
+  post "question/addCache", to: "home#addCache"
+  post "question/addRoutines", to: "home#addRoutines"
   
 end

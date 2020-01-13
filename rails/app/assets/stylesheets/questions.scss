@@ -1,0 +1,102 @@
+/* WEBフォント導入 */
+/* 美咲フォント */
+@font-face {
+	font-family: "misaki1";
+	src: url("../BotUI_test/misaki_gothic.ttf");
+}
+@font-face {
+	font-family: "misaki2";
+	src: url("../BotUI_test/misaki_gothic_2nd.ttf");
+}
+@font-face {
+	font-family: "misaki3";
+	src: url("../BotUI_test/misaki_mincho.ttf");
+}
+
+
+/* スタイル */
+@media screen and (min-width: 767px) {
+	/* スマホ画面に合わせて確認できるようにここは用意してあるけど書いていない
+	   画面確認をする際はページ開いてF12押してからスマホ対応画面で確認 */
+}
+@media screen and (max-width: 767px){
+	
+	/* 画面上部の付属物 */
+	.attach {
+		width: 350px;
+		height: 50px;
+		margin: 5px auto;
+	}
+	
+	.back { /* 戻るボタン */
+		float: left;
+		width: 80px;
+	}
+	.prog { /* 進行度 */
+		width: 150px;
+		height: 43px;
+		margin: 5px 12px;
+		/* visibility: hidden; */
+	}
+	.forward { /* 進むボタン */
+		float: right;
+		width: 80px;
+	}
+	
+	
+	/* 画面内 */
+	.frame {
+		overflow: auto;
+		width: 350px;
+		height: 600px;
+		border: solid 3px;
+		margin: 0 auto;
+		position: relative;
+	}
+	
+	
+	.btn_yes {
+		position: absolute;
+		top: 530px;
+		left: 10px;
+		width: 150px;
+	}
+	
+	.btn_no {
+		position: absolute;
+		top: 530px;
+		left: 177px;
+		width: 150px;
+	}
+	
+	
+	/* nes-???系フォント制御用 */
+	.nes-btn {
+		font-family: "misaki2";
+	}
+
+	.nes-container.is-rounded{
+		width: 310px;
+		height: 350px;
+		overflow: auto;
+		font-family: "misaki2";
+		margin: 10px auto 0;
+		display: block;
+		padding: 5px 0 10px;
+	}
+	.charactor {
+		margin: 0 auto ;
+		display: block;
+		width:155px;
+		height:230px;
+	}
+	.bear {
+		width:100%;
+		height:100%;
+	}
+	.botui-app-container1{
+		width:100%;
+		height:100%;
+	}
+	
+}
