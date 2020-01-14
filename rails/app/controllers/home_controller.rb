@@ -253,7 +253,7 @@ class HomeController < ApplicationController
         )
         if routine.save then
             f = File.open('log.txt', 'a')
-            f.puts("," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.puts("(" + current_user.name + ",1)," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
@@ -303,7 +303,7 @@ class HomeController < ApplicationController
         )
         if routine.save then
             f = File.open('log.txt', 'a')
-            f.puts("," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.puts("(" + current_user.name + ",2_1)," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
@@ -353,7 +353,7 @@ class HomeController < ApplicationController
         )
         if routine.save then
             f = File.open('log.txt', 'a')
-            f.puts(params[:referenced_routine_text] + "," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.puts("(" + current_user.name + ",2_2)" + params[:referenced_routine_text] + "," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
         end
