@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_19_073542) do
+ActiveRecord::Schema.define(version: 2020_01_13_051748) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "schedule_id"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2019_12_19_073542) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "cache_id"
+    t.integer "publish", default: 1
     t.index ["cache_id"], name: "index_routines_on_cache_id"
     t.index ["user_id"], name: "index_routines_on_user_id"
   end
