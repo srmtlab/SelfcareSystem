@@ -2855,7 +2855,6 @@ $(function(){
 			}
 			else{
 				search_subclass(word,wd).success(function(data){
-					//console.log(data.results.bindings[0].b["value"])
 					if(data.results.bindings.length>0){
 						func1(next);
 						func3(word,wd);
@@ -2875,22 +2874,18 @@ $(function(){
 									else{
 										func2(word,next);
 									}
-								})
-								search_include_subclass(word,wd).error(function(data){
+								}).error(function(data){
 									func2(word,next);
-									
 								})
 							}
 						})
-						search_instanceclass(word,wd).error(function(data){
+						.error(function(data){
 							func2(word,next);
-							
 						})
 
 					}
 				})
-				search_subclass(word,wd).error(function(data){
-					
+				.error(function(data){
 					func2(word,next);
 				})
 			}
@@ -2944,9 +2939,7 @@ $(function(){
 			},
 			dataType: 'json',
 		})
-		
 	}
-
     ////////     入力された単語をsubclass ofから調べる(sparql)    ////////////////////////
 	function search_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
@@ -3007,7 +3000,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
-			timeout: 40000,
+			timeout: 30000,
 		})
 	}
 	
