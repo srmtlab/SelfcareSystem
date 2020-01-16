@@ -229,7 +229,10 @@ $(function(){
 				}
 			}).then(function(res){
 				food_index_name = res.value;
-				
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -653,6 +656,10 @@ $(function(){
 			}).then(function(res){
 				hobby_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -682,6 +689,10 @@ $(function(){
 				}
 			}).then(function(res){
 				hobby_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -1098,6 +1109,10 @@ $(function(){
 			}).then(function(res){
 				before_sleep_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -1496,6 +1511,10 @@ $(function(){
 			}).then(function(res){
 				communication_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -1521,6 +1540,10 @@ $(function(){
 				}
 			}).then(function(res){
 				communication_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -1944,6 +1967,10 @@ $(function(){
 			}).then(function(res){
 				location_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -2327,6 +2354,10 @@ $(function(){
 				}
 			}).then(function(res){
 				location_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -2845,9 +2876,22 @@ $(function(){
 										func2(word,next);
 									}
 								})
+								search_include_subclass(word,wd).error(function(data){
+									func2(word,next);
+									
+								})
 							}
 						})
+						search_instanceclass(word,wd).error(function(data){
+							func2(word,next);
+							
+						})
+
 					}
+				})
+				search_subclass(word,wd).error(function(data){
+					
+					func2(word,next);
 				})
 			}
 		})
@@ -2930,6 +2974,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 30000,
 		})
 	};
 	
@@ -2962,6 +3007,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 40000,
 		})
 	}
 	
@@ -2985,6 +3031,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 40000,
 		})
 	}
 
