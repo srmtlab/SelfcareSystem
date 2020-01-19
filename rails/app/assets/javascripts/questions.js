@@ -2353,7 +2353,7 @@ $(function(){
 					placeholder: '入力してね！'
 				}
 			}).then(function(res){
-				location_index_name = res.value;
+				life_important_index_name = res.value;
 				botui.message.bot({
 					delay:1,
 					content:'それが何か調べるからちょっと待ってね'
@@ -2858,18 +2858,21 @@ $(function(){
 					if(data.results.bindings.length>0){
 						func1(next);
 						func3(word,wd);
+						console.log("単語そのものがある")
 					}
 					else{
 						search_instanceclass(word,wd).success(function(data){
 							if(data.results.bindings.length>0){
 								func1(next);
 								func3(word,wd);
+								console.log("単語そのものがある")
 							}
 							else{
 								search_include_subclass(word,wd).success(function(data){
 									if(data.results.bindings.length>0){
 										func1(next);
 										func3(word,wd);
+										console.log("単語の主辞がある")
 									}
 									else{
 										func2(word,next);
