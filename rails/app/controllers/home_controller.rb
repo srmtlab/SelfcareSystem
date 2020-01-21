@@ -28,13 +28,31 @@ class HomeController < ApplicationController
         
         selected_routines = []
         i = 0
+        text_flag = true
         while i < routines.count do
-            if routines[i].user != current_user then
-                selected_routines.push(routines[i])
+            routine_i = routines[i]
+            j = 0
+            for routine in routines do
+                if j != i then
+                    if routine_i.text == routine.text then
+                        if i > j then
+                            text_flag = false
+                        end
+                    end
+                end
+                j += 1
+            end
+            if text_flag == true then
+                if routine_i.publish == "permission" then
+                    if routine_i.user != current_user then
+                        selected_routines.push(routine_i)
+                    end
+                end
             end
             i += 1
         end
         @selected_routines = selected_routines
+        
         # ログインユーザの生活指標とそのカテゴリー情報
         user_routines = current_user.routines
         @user_routines = user_routines
@@ -59,7 +77,49 @@ class HomeController < ApplicationController
         @user_categories = user_categories
 
 =begin
-        
+
+        # 被験者実験で使った検索プログラムにpublishの管理を追加
+        selected_routines = []
+        i = 0
+        while i < routines.count do
+            if routines[i].publish == "permission" then
+                if routines[i].user != current_user then
+                    selected_routines.push(routines[i])
+                end
+            end
+            i += 1
+        end
+        @selected_routines = selected_routines
+
+        # 一応上のやつにpublishと同じ文字列の生活指標を淹れないプログラムを追加したやつ(えらってる？)
+        selected_routines = []
+        i = 0
+        text_flag = true
+        while i < routines.count do
+            routine_i = routines[i]
+            j = 0
+            for routine in routines do
+                if j != i then
+                    if routine_i.text == routine.text then
+                        if i > j then
+                            text_flag = false
+                        end
+                    end
+                end
+                j += 1
+            end
+            if text_flag == true then
+                if routine_i.publish == 1 then
+                    if routine_i.user != current_user then
+                        selected_routines.push(routine_i)
+                    end
+                end
+            end
+            i += 1
+        end
+
+
+        # 本番用プログラム
         user_num = User.count
         selected_routines = []
         selected_categories = []
