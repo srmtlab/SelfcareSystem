@@ -229,7 +229,10 @@ $(function(){
 				}
 			}).then(function(res){
 				food_index_name = res.value;
-				
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -653,6 +656,10 @@ $(function(){
 			}).then(function(res){
 				hobby_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -682,6 +689,10 @@ $(function(){
 				}
 			}).then(function(res){
 				hobby_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -1098,6 +1109,10 @@ $(function(){
 			}).then(function(res){
 				before_sleep_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -1496,6 +1511,10 @@ $(function(){
 			}).then(function(res){
 				communication_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -1521,6 +1540,10 @@ $(function(){
 				}
 			}).then(function(res){
 				communication_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -1944,6 +1967,10 @@ $(function(){
 			}).then(function(res){
 				location_index_name = res.value;
 				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
+				botui.message.bot({
 					loading: true
 				}).then(function(index){
 					msgIndex = index;
@@ -2327,6 +2354,10 @@ $(function(){
 				}
 			}).then(function(res){
 				location_index_name = res.value;
+				botui.message.bot({
+					delay:1,
+					content:'それが何か調べるからちょっと待ってね'
+				})
 				botui.message.bot({
 					loading: true
 				}).then(function(index){
@@ -2824,7 +2855,6 @@ $(function(){
 			}
 			else{
 				search_subclass(word,wd).success(function(data){
-					//console.log(data.results.bindings[0].b["value"])
 					if(data.results.bindings.length>0){
 						func1(next);
 						func3(word,wd);
@@ -2844,10 +2874,19 @@ $(function(){
 									else{
 										func2(word,next);
 									}
+								}).error(function(data){
+									func2(word,next);
 								})
 							}
 						})
+						.error(function(data){
+							func2(word,next);
+						})
+
 					}
+				})
+				.error(function(data){
+					func2(word,next);
 				})
 			}
 		})
@@ -2900,9 +2939,7 @@ $(function(){
 			},
 			dataType: 'json',
 		})
-		
 	}
-
     ////////     入力された単語をsubclass ofから調べる(sparql)    ////////////////////////
 	function search_subclass(word,wd){
 		const query = `PREFIX wd: <http://www.wikidata.org/entity/> 
@@ -2930,6 +2967,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 30000,
 		})
 	};
 	
@@ -2962,6 +3000,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 30000,
 		})
 	}
 	
@@ -2985,6 +3024,7 @@ $(function(){
 				query
 			},
 			dataType: 'json',
+			timeout: 40000,
 		})
 	}
 
