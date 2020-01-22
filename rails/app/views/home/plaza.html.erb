@@ -4,6 +4,7 @@
 
 <%= javascript_tag do %>
     var current_user = <%= raw current_user.to_json %>;
+    var template_file_index = <%= raw @template_file %>;
     var category_first = <%= raw @category_first %>;
     var category_second = <%= raw @category_second %>;
     var routines = <%= raw @selected_routines.to_json %>;
@@ -125,7 +126,7 @@
 <div class="nes-container is-rounded test_tutorial1">
     <button type="button" class="nes-btn btn_tutorial1_close">実験スタート</button>
     <div class="tutorial_list">
-        <p class="tutorial_title">実験1:チュートリアル</p>
+        <p class="tutorial_title">チュートリアル</p>
         <p class="tutorial_text">いまから君には生活指標を<br>探してもらうよ。</p>
         <p class="tutorial_text">思いついた生活指標が<br>あったら、入力ボタンを<br>押して入力してね。</p>
         <p class="tutorial_text">ヘルプボタン:<br>生活指標のカテゴリーの一覧<br>(画面右下)</p>
@@ -137,7 +138,7 @@
 <div class="nes-container is-rounded test_tutorial2">
     <button type="button" class="nes-btn btn_tutorial2_close">実験スタート</button>
     <div class="tutorial_list">
-        <p class="tutorial_title">実験2:チュートリアル</p>
+        <p class="tutorial_title">チュートリアル</p>
         <p class="tutorial_text">いまから君には生活指標を<br>探してもらうよ。</p>
         <p class="tutorial_text">思いついた生活指標が<br>あったら、入力ボタンを<br>押して入力してね。</p>
         <p class="tutorial_text_ex">意見参考ボタン:<br>キャラクターが話し合いをして、<br>生活指標を思い出すときに<br>参考になるような意見を<br>話してくれるかも？<br>(意見参考ボタンの<br>利用上限は2回です。<br>使い切らないと終われないから、<br>注意してね。)</p>
