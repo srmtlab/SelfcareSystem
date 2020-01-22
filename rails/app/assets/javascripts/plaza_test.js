@@ -73,11 +73,17 @@ $(function () {
         }
         $(".routines_list").append("<p class=\"routines_text\">" + user_routines[i_c].text + "<br>(<span class=\"routines_routine\">" + routine_categories + "</span>)</p>");
     }
+    var template_file_url = "";
+    if (template_file_index == 0) {
+        template_file_url = "/template_talking_test.json";
+    } else if (template_file_index == 1) {
+        template_file_url = "/template_talking_test2.json";
+    }
 
     //######################################
     //広場画面案内
     //######################################
-    $.getJSON("/template_talking_test.json", function (data) {
+    $.getJSON(template_file_url, function (data) {
         //導入
         $(".btn_history_start").on("click", function () {
             $(".btn_next").prop("disabled", true);

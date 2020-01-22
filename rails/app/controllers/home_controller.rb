@@ -11,18 +11,57 @@ class HomeController < ApplicationController
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def plaza
         # 引き出す指標のカテゴリーを選択(被験者実験用)
-        categories = [0, 1, 2, 3] # 数字はそれぞれhealth, mind, sociality, self_expressionに対応
-        while categories.length > 2 do
-            categories.delete_at(rand(categories.length) + 1)
+        # categories = [0, 1, 2, 3] # 数字はそれぞれhealth, mind, sociality, self_expressionに対応
+
+        # 第2評価実験用 今後一生使わない
+        template_file = 0
+        categories = []
+        categories_0 = [1, 2]
+        categories_1 = [1, 3]
+        categories_2 = [2, 3]
+        categories_3 = [1, 3]
+        categories_4 = [2, 1]
+        categories_5 = [3, 1]
+        categories_6 = [3, 2]
+        categories_7 = [3, 1]
+
+        if (current_user.id % 8) < 4 then
+            if (current_user.id % 4) == 0 then
+                categories.push(categories_0[0])
+                categories.push(categories_0[1])
+            elsif (current_user.id % 4) == 1 then
+                categories.push(categories_1[0])
+                categories.push(categories_1[1])
+            elsif (current_user.id % 4) == 2 then
+                categories.push(categories_2[0])
+                categories.push(categories_2[1])
+            elsif (current_user.id % 4) == 3 then
+                categories.push(categories_3[0])
+                categories.push(categories_3[1])
+            end
+            template_file = 0
+        elsif (current_user.id % 8) >= 4 then
+            if (current_user.id % 4) == 0 then
+                categories.push(categories_4[0])
+                categories.push(categories_4[1])
+            elsif (current_user.id % 4) == 1 then
+                categories.push(categories_5[0])
+                categories.push(categories_5[1])
+            elsif (current_user.id % 4) == 2 then
+                categories.push(categories_6[0])
+                categories.push(categories_6[1])
+            elsif (current_user.id % 4) == 3 then
+                categories.push(categories_7[0])
+                categories.push(categories_7[1])
+            end
+            template_file = 1
         end
-        # 広場画面を参考にする生活指標カテゴリー
-        selected_category_index = rand(2)
-        category_second = categories[selected_category_index]
-        @category_second = category_second
-        # 広場画面を参考にしない生活指標カテゴリー
-        categories.delete_at(selected_category_index)
+        
+        @template_file = template_file
         category_first = categories[0]
+        category_second = categories[1]
         @category_first = category_first
+        @category_second = category_second
         # 広場画面を参考にする生活指標カテゴリーを持つ生活指標を全て取り出す
         routines = Category.all[category_second].routines.all
         
@@ -78,7 +117,7 @@ class HomeController < ApplicationController
 
 =begin
 
-        # 被験者実験で使った検索プログラムにpublishの管理を追加
+        # １．被験者実験で使った検索プログラムにpublishの管理を追加
         selected_routines = []
         i = 0
         while i < routines.count do
@@ -91,35 +130,23 @@ class HomeController < ApplicationController
         end
         @selected_routines = selected_routines
 
-        # 一応上のやつにpublishと同じ文字列の生活指標を淹れないプログラムを追加したやつ(えらってる？)
-        selected_routines = []
-        i = 0
-        text_flag = true
-        while i < routines.count do
-            routine_i = routines[i]
-            j = 0
-            for routine in routines do
-                if j != i then
-                    if routine_i.text == routine.text then
-                        if i > j then
-                            text_flag = false
-                        end
-                    end
-                end
-                j += 1
-            end
-            if text_flag == true then
-                if routine_i.publish == 1 then
-                    if routine_i.user != current_user then
-                        selected_routines.push(routine_i)
-                    end
-                end
-            end
-            i += 1
+        # ２．被験者実験で使った検索プログラムにpublishの管理と同名生活指標を選択しないプログラムを追加
+        # 引き出す指標のカテゴリーを選択(被験者実験用)
+        categories = [0, 1, 2, 3] # 数字はそれぞれhealth, mind, sociality, self_expressionに対応
+        while categories.length > 2 do
+            categories.delete_at(rand(categories.length) + 1)
         end
+        # 広場画面を参考にする生活指標カテゴリー
+        selected_category_index = rand(2)
+        category_second = categories[selected_category_index]
+        @category_second = category_second
+        # 広場画面を参考にしない生活指標カテゴリー
+        categories.delete_at(selected_category_index)
+        category_first = categories[0]
+        @category_first = category_first
 
 
-        # 本番用プログラム
+        # ３．本番用プログラム
         user_num = User.count
         selected_routines = []
         selected_categories = []
@@ -312,7 +339,7 @@ class HomeController < ApplicationController
             cache: cache_find
         )
         if routine.save then
-            f = File.open('log.txt', 'a')
+            f = File.open('log2.txt', 'a')
             f.puts("(" + current_user.name + ",1)," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
@@ -362,7 +389,7 @@ class HomeController < ApplicationController
             cache: cache_find
         )
         if routine.save then
-            f = File.open('log.txt', 'a')
+            f = File.open('log2.txt', 'a')
             f.puts("(" + current_user.name + ",2_1)," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
@@ -412,7 +439,7 @@ class HomeController < ApplicationController
             cache: cache_find
         )
         if routine.save then
-            f = File.open('log.txt', 'a')
+            f = File.open('log2.txt', 'a')
             f.puts("(" + current_user.name + ",2_2)" + params[:referenced_routine_text] + "," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
             f.close
             render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
