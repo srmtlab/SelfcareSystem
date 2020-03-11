@@ -636,6 +636,7 @@ body {
           font-family: "misaki2";
         }
       }
+      //決定ボタン
       .btn_submit {
         position: absolute;
         top: 285px;
@@ -643,6 +644,7 @@ body {
         width: 120px;
         z-index: 16;
       }
+      //キャンセルボタン
       .btn_cancel {
         position: absolute;
         top: 285px;
@@ -663,8 +665,9 @@ body {
       }
     }
     /* ########################################################## */
-    /* Yes/No, history/nextボタン */
+    /* 各種ボタン */
     /* ########################################################## */
+    //入力ボタン
     .btn_enter {
       position: absolute;
       top: 470px;
@@ -673,6 +676,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //意見参考ボタン
     .btn_plaza {
       position: absolute;
       top: 470px;
@@ -681,6 +685,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //記録画面ボタン
     .btn_record {
       position: absolute;
       top: 470px;
@@ -689,6 +694,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //はいボタン
     .btn_yes {
       position: absolute;
       top: 470px;
@@ -697,6 +703,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //いいえボタン
     .btn_no {
       position: absolute;
       top: 470px;
@@ -705,6 +712,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //履歴ボタン
     .btn_history {
       position: absolute;
       top: 530px;
@@ -713,6 +721,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //MyRoutineボタン
     .btn_routines {
       position: absolute;
       top: 530px;
@@ -721,6 +730,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //ヘルプボタン
     .btn_help {
       position: absolute;
       top: 530px;
@@ -729,6 +739,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //次へボタン
     .btn_next {
       position: absolute;
       top: 530px;
@@ -737,6 +748,7 @@ body {
       z-index: 10;
       display: none;
     }
+    //次へボタン(意見参考機能用&本番用)
     .btn_next_plaza {
       position: absolute;
       top: 530px;
