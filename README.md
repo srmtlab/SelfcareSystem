@@ -95,7 +95,7 @@ git checkout develop
 # Authors
 - Kento Yasuda
 - Yota Shimizu
- - [清水が担当したファイル等の説明テキストファイル](https://github.com/srmtlab/research_YotaShimizu/blob/master/SelfcareSystem%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.txt)
+    - [清水が担当したファイル等の説明テキストファイル](https://github.com/srmtlab/research_YotaShimizu/blob/master/SelfcareSystem%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6.txt)
 - S'lounge
 - Akira Kamiya
   
