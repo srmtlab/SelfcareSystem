@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post "plaza/routines_test1", to: "home#routines_test1"
   post "plaza/routines_test2_1", to: "home#routines_test2_1"
   post "plaza/routines_test2_2", to: "home#routines_test2_2"
+  post "plaza/routines_new", to: "home#routines_new"
   # get '/', to: 'home#index'
 
   devise_for :users, :controllers => {

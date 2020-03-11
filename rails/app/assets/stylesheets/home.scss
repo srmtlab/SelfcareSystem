@@ -191,7 +191,7 @@ body {
     }
 
     /* ########################################################## */
-    /* 広場画面本体 */
+    /* 広場画面全体 */
     /* ########################################################## */
     .swiper-container {
       width: 100%;
@@ -322,7 +322,7 @@ body {
       }
     }
     /* ########################################################## */
-    /* 会話表示部分 */
+    /* 画面上部会話表示部分 */
     /* ########################################################## */
     .nes-container.is-rounded.talk {
       position: absolute;
@@ -447,7 +447,7 @@ body {
       }
     }
     /* ########################################################## */
-    /* ユーザの生活指標表示部分 */
+    /* ユーザの全生活指標表示部分 */
     /* ########################################################## */
     .nes-container.is-rounded.test_user_routines {
       position: absolute;
@@ -668,16 +668,24 @@ body {
     .btn_enter {
       position: absolute;
       top: 470px;
-      left: 95px;
-      width: 150px;
+      left: 10px;
+      width: 98px;
       z-index: 10;
       display: none;
     }
     .btn_plaza {
       position: absolute;
-      top: 380px;
-      left: 205px;
-      width: 125px;
+      top: 470px;
+      left: 120px;
+      width: 98px;
+      z-index: 10;
+      display: none;
+    }
+    .btn_record {
+      position: absolute;
+      top: 470px;
+      left: 229px;
+      width: 98px;
       z-index: 10;
       display: none;
     }

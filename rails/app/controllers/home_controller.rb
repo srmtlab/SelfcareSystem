@@ -10,6 +10,217 @@ class HomeController < ApplicationController
     # 広場画面の挙動
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def plaza
+        # plaza.htmlに渡している変数
+        # 
+        # current_user : ユーザ情報
+        # @selected_root : 全ての生活指標(1,2)orワースト生活指標(3~10)
+        # @category1 : 選択されるワースト1生活指標カテゴリーorランダムカテゴリー1
+        # @category2 : 選択されるワースト1生活指標カテゴリーorランダムカテゴリー2
+        # @category3 : 選択されるワースト2生活指標カテゴリーorランダムカテゴリー3
+        # @selected_routine1 : ワースト1で選択された生活指標カテゴリーの生活指標
+        #                      (publish値，ユーザと同じ指標じゃないか，同名生活指標が入ってないかは検証済み)
+        #                      orランダムな生活指標1
+        # @selected_routine2 : ワースト1で選択された生活指標カテゴリーの生活指標orランダムな生活指標2
+        # @selected_routine3 : ワースト2で選択された生活指標カテゴリーの生活指標orランダムな生活指標3
+        # @selected_avator1 : selected_routine1を持つユーザのエージェント
+        # @selected_avator2 : selected_routine2を持つユーザのエージェントorサンプルエージェント
+        # @selected_avator3 : selected_routine3を持つユーザのエージェントorサンプルエージェント
+        # @user_routines : ユーザが持つ全ての生活指標
+        # @user_categories : ユーザのそれぞれの生活指標が属する生活指標カテゴリー一覧の配列
+        #                    例：[[0,1], [2], [0,3],[0,1,2]]
+        
+        ##################################################################
+        # plaza_new.jsへ生活指標を渡すためのプログラム
+        # ユーザが持つ生活指標が所属するカテゴリーの中で所属数が小さい2つを選択し、
+        # その2つのカテゴリーに属する他者の生活指標を2,1個で合計3個紹介する...つもり
+        ##################################################################
+
+        # ユーザが持つ生活指標が所属するカテゴリーの中で所属数が小さい2つを選択
+        # 生活指標カテゴリーは0(health),1(mind),2(sociality),3(self_expression)と整数で表現している
+        category1 = -1 # 生活指標所属数ワースト1のカテゴリー、生活指標カテゴリーその1(ランダム用)
+        category2 = -1 # 生活指標所属数ワースト2のカテゴリー、生活指標カテゴリーその2(ランダム用)
+        category3 = -1 # 生活指標カテゴリーその3(ランダム用)
+        user_categories_num = [0, 0, 0, 0]
+        user_routines = current_user.routines
+
+        # ランダム生活指標を表示するか、ワースト生活指標を表示するか
+        # 1,2:ランダム、3~10:ワースト
+        selected_root = rand(10) + 1
+        @selected_root = selected_root
+
+        if selected_root <= 2 then
+            category1 = rand(4)
+            category2 = rand(4)
+            category3 = rand(4)
+            @category1 = category1
+            @category2 = category2
+            @category3 = category3
+            routines1 = Category.all[category1].routines.all
+            routines2 = Category.all[category2].routines.all
+            routines3 = Category.all[category3].routines.all
+            selected_routines1 = selected_routines(routines1)
+            selected_routines2 = selected_routines(routines2)
+            selected_routines3 = selected_routines(routines3)
+            selected_routine1 = selected_routines1[rand(selected_routines1.count)]
+            selected_routine2 = selected_routines2[rand(selected_routines2.count)]
+            selected_routine3 = selected_routines3[rand(selected_routines3.count)]
+            @selected_routine1 = selected_routine1
+            @selected_routine2 = selected_routine2
+            @selected_routine3 = selected_routine3
+        else
+            # ユーザの生活指標がそれぞれのカテゴリーにいくつずつ所属しているか
+            for routine in user_routines do
+                for category in routine.routine_categories do
+                    if category.category.name == "health" then
+                        user_categories_num[0] += 1
+                    elsif category.category.name == "mind" then
+                        user_categories_num[1] += 1
+                    elsif category.category.name == "sociality" then
+                        user_categories_num[2] += 1
+                    elsif category.category.name == "self_expression" then
+                        user_categories_num[3] += 1
+                    end
+                end
+            end
+            # @test1 = user_categories_num # ex)[25, 16, 10 ,12]
+
+            # 生活指標カテゴリーの所属数が少ないワースト2を見つける
+            min1 = 10000
+            min2 = 10000
+            i_min = 0
+            for num in user_categories_num do
+                if i_min == 0 then
+                    category1 = i_min
+                    min1 = num
+                else
+                    if num < min1 then
+                        category2 = category1
+                        category1 = i_min
+                        min2 = min1
+                        min1 = num
+                    elsif num > min1 && num < min2 then
+                        category2 = i_min
+                        min2 = num
+                    end
+                end
+                i_min += 1
+            end
+            # @test2 = [category1, category2, min1, min2] # ex)[2, 3, 10, 12]
+            @category1 = category1
+            @category2 = category1
+            @category3 = category2
+
+            # 選択された2つのカテゴリーに所属するすべての生活指標
+            routines1 = Category.all[category1].routines.all
+            routines2 = Category.all[category2].routines.all
+            # 関数selected_routinesを用いて各生活指標群について、
+            # 「同名指標，ユーザが持っている指標、publish値」についての選別を実行
+            selected_routines1 = selected_routines(routines1)
+            selected_routines2 = selected_routines(routines2)
+            # 3つの生活指標indexを選択
+            # random_num1とrandom_num2は同じカテゴリーから取り出すため、数字がかぶってはならない
+            random_num1 = rand(selected_routines1.count)
+            random_num2 = rand(selected_routines1.count)
+            while random_num2 == random_num1 do
+                random_num2 = rand(selected_routines1.count)
+            end
+            random_num3 = rand(selected_routines2.count)
+            selected_routine1 = selected_routines1[random_num1]
+            selected_routine2 = selected_routines1[random_num2]
+            selected_routine3 = selected_routines2[random_num3]
+            @selected_routine1 = selected_routine1
+            @selected_routine2 = selected_routine2
+            @selected_routine3 = selected_routine3
+        end
+
+        # 選択された生活指標からエージェント情報を選択する
+        avators = [
+            {
+                "name": "ニャン太",
+                "icon": "cat"
+            },
+            {
+                "name": "クマ吉",
+                "icon": "bear"
+            },
+            {
+                "name": "ラビ子",
+                "icon": "rabbit"
+            }
+        ]
+        selected_user1 = selected_routine1.user
+        selected_user2 = selected_routine2.user
+        selected_user3 = selected_routine3.user
+        selected_avator1 = selected_user1.avators[0]
+        selected_avator2 = selected_user2.avators[0]
+        selected_avator3 = selected_user3.avators[0]
+        random_avator_num1 = -1
+        random_avator_num2 = -1
+        random_avator_num3 = -1
+        if selected_user2 == selected_user1 then
+            random_avator_num1 = rand(3)
+            selected_avator2 = avators[random_avator_num1]
+            if selected_user3 == selected_user1 then
+                random_avator_num2 = rand(3)
+                if random_avator_num2 == random_avator_num1 then
+                    if random_avator_num2 < 2 then
+                        random_avator_num2 += 1
+                    elsif random_avator_num2 == 2 then
+                        random_avator_num2 = 0
+                    end
+                end
+                selected_avator3 = avators[random_avator_num2]
+            end
+        elsif selected_user2 != selected_user1 &&
+            (selected_user3 == selected_user1 || selected_user3 == selected_user2) then
+            random_avator_num3 = rand(3)
+            selected_avator3 = avators[random_avator_num3]
+        end
+        @selected_avator1 = selected_avator1
+        @selected_avator2 = selected_avator2
+        @selected_avator3 = selected_avator3
+        
+        # ログインユーザの生活指標とそのカテゴリー情報
+        user_routines = current_user.routines
+        @user_routines = user_routines
+        user_categories = []
+        for routine in user_routines do
+            i = 0
+            user_category = []
+            while i < routine.routine_categories.count do
+                if routine.routine_categories[i].category.name == "health" then
+                    user_category.push(0)
+                elsif routine.routine_categories[i].category.name == "mind" then
+                    user_category.push(1)
+                elsif routine.routine_categories[i].category.name == "sociality" then
+                    user_category.push(2)
+                elsif routine.routine_categories[i].category.name == "self_expression" then
+                    user_category.push(3)
+                end
+                i += 1
+            end
+            user_categories.push(user_category)
+        end
+        @user_categories = user_categories
+
+    end
+
+=begin
+###########################################################################
+# ↓(評価実験用)
+###########################################################################
+        # plaza.htmlに渡している変数
+        # 
+        # current_user : ユーザ情報
+        # @template_file : 0:第1実験→第2実験のファイル / 1:第2実験→第1実験のファイル
+        # @category_first : 第1実験で選択される生活指標カテゴリー
+        # @category_second : 第2実験で選択される生活指標カテゴリー
+        # @selected_routines : 第2実験で選択された生活指標カテゴリーの生活指標すべて
+        #                      (publish値，ユーザと同じ指標じゃないか，同名生活指標が入ってないかは検証済み)
+        # @user_routines : ユーザが持つ全ての生活指標
+        # @user_categories : ユーザのそれぞれの生活指標が属する生活指標カテゴリー一覧の配列
+        #                    例：[[0,1], [2], [0,3],[0,1,2]]
+
         # 引き出す指標のカテゴリーを選択(被験者実験用)
         # categories = [0, 1, 2, 3] # 数字はそれぞれhealth, mind, sociality, self_expressionに対応
 
@@ -64,32 +275,8 @@ class HomeController < ApplicationController
         @category_second = category_second
         # 広場画面を参考にする生活指標カテゴリーを持つ生活指標を全て取り出す
         routines = Category.all[category_second].routines.all
-        
-        selected_routines = []
-        i = 0
-        text_flag = true
-        while i < routines.count do
-            routine_i = routines[i]
-            j = 0
-            for routine in routines do
-                if j != i then
-                    if routine_i.text == routine.text then
-                        if i > j then
-                            text_flag = false
-                        end
-                    end
-                end
-                j += 1
-            end
-            if text_flag == true then
-                if routine_i.publish == "permission" then
-                    if routine_i.user != current_user then
-                        selected_routines.push(routine_i)
-                    end
-                end
-            end
-            i += 1
-        end
+        # 選択されたカテゴリーの生活指標について選別(同名，ユーザが持つ、publish値)を行う
+        selected_routines = selected_routines(routines)
         @selected_routines = selected_routines
         
         # ログインユーザの生活指標とそのカテゴリー情報
@@ -114,6 +301,11 @@ class HomeController < ApplicationController
             user_categories.push(user_category)
         end
         @user_categories = user_categories
+
+#######################################################################
+# (↑評価実験用) ここより下から基礎プログラムまでのコメントプログラムはゴミ？かな
+#######################################################################
+=end
 
 =begin
 
@@ -213,7 +405,6 @@ class HomeController < ApplicationController
             end
         end
 
-        # TODO: 指標を３つ取り出すプログラムを作る
         # 条件を満たす3つのルーティーンを見つける
         while selected_routines.length < 3 do
             # selected_user: ランダムに選択された表示ユーザ候補
@@ -253,11 +444,77 @@ class HomeController < ApplicationController
         @avators_selected = selected_avators
 =end
 
+
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # 広場画面で入力されたルーティーンをデータベースに登録する(plaza_new用(本番用))
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    def routines_new
+        ######################################
+        # 入力された生活指標をデータベースに登録するためのカテゴリー情報及び
+        # logに記入するためのカテゴリー情報の作成
+        ######################################
+        i_category = 0
+        category_box = []
+        category_index = []
+        # params[:categories]の中身は[true, true, false, true]のような形になっている
+        # それぞれの真偽値の値はカテゴリーhealth,mind,sociality,self_expressionに対応しており、
+        # trueの場合はそのカテゴリーを含む生活指標であるということ
+        # ex) 味噌汁を飲む(health, mind) → params[:categories]:[true, true, false, false]
+        for category in params[:categories] do
+            if category == "true" then
+                category_box.push(Category.all[i_category])
+                category_index.push(i_category.to_s)
+            end
+            i_category += 1
+        end
+        # 味噌汁の例で上のプログラムを実行した場合、
+        # category_box:[Category.all[0], Category.all[1]] //これをDB登録の際に試用
+        # category_index:[0,1]
+
+        i_categories = 0
+        categories_index = ""
+        for index in category_index do
+            if i_categories < category_index.length - 1 then
+                categories_index = categories_index + index + ","
+            elsif i_categories == category_index.length - 1 then
+                categories_index = categories_index + index
+            end
+            i_categories += 1
+        end
+        # categories_index = "0,1" //これをlogに記入の際に使用
         
+        ############################
+        # キャッシュデータの登録
+        ############################
+        cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
+        if !cache_find then
+            cache = Cache.new(
+                label: params[:routine_text]
+            )
+            cache.save
+            cache_find = Cache.select("id, label, wd_type").find_by(label: params[:routine_text])
+        end
+        ############################
+        # 生活指標データの登録
+        ############################
+        routine = Routine.new(
+            user_id: current_user.id,
+            text: params[:routine_text],
+            period: params[:routine_period],
+            count: params[:routine_count],
+            categories: category_box,
+            cache: cache_find
+        )
+        if routine.save then
+            f = File.open('log_new.txt', 'a')
+            f.puts("(" + current_user.name + ")" + params[:referenced_routine_text] + "," + params[:referenced_category].to_s + "=>" + params[:routine_text] + "," + categories_index)
+            f.close
+            render :json => {"who": -1, "talk": "生活指標を登録したよ。<br>教えてくれてありがとう。"} 
+        end
     end
 
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    # 広場画面で入力されたルーティーンをデータベースに登録する
+    # 広場画面で入力されたルーティーンをデータベースに登録する　(基礎プログラム)
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def routines
         i_category = 0
@@ -447,6 +704,39 @@ class HomeController < ApplicationController
     end
 
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # 関数
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    def selected_routines(routines)
+        selected_routines = []
+        i = 0
+        text_flag = true
+        while i < routines.count do
+            routine_i = routines[i]
+            j = 0
+            for routine in routines do
+                if j != i then
+                    if routine_i.text == routine.text then
+                        if i > j then
+                            text_flag = false
+                        end
+                    end
+                end
+                j += 1
+            end
+            if text_flag == true then
+                if routine_i.publish == "permission" then
+                    if routine_i.user != current_user then
+                        selected_routines.push(routine_i)
+                    end
+                end
+            end
+            i += 1
+        end
+        return selected_routines
+    end
+
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     # ???
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def routine_params
@@ -454,6 +744,9 @@ class HomeController < ApplicationController
         # 神谷先輩が書いた　何のためにあるのか分からない...
     end
 
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # 安田君のプログラム？
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def register
         routine = Cache.select('id, label, wd_type').find_by(label: params['text'])
         if routine

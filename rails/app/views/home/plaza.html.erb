@@ -1,7 +1,7 @@
-<%= javascript_include_tag "plaza_test.js" %>
+<!-- ############################################################### -->
 <!-- 以下は被験者実験用のソースコードです -->
 <!-- <%= javascript_include_tag "plaza_test.js" %> -->
-
+<!--
 <%= javascript_tag do %>
     var current_user = <%= raw current_user.to_json %>;
     var template_file_index = <%= raw @template_file %>;
@@ -11,6 +11,30 @@
     var user_routines = <%= raw @user_routines.to_json %>;
     var user_categories = <%= raw @user_categories.to_json %>;
 <% end %>
+-->
+<!-- ############################################################### -->
+
+<!-- ############################################################### -->
+<!-- 以下は本番用のソースコードです -->
+<%= javascript_include_tag "plaza_new.js" %>
+
+<%= javascript_tag do %>
+    var current_user = <%= raw current_user.to_json %>;
+    var selected_root = <%= @selected_root %>;
+    var category1 = <%= @category1 %>;
+    var category2 = <%= @category2 %>;
+    var category3 = <%= @category3 %>;
+    var routine1 = <%= raw @selected_routine1.to_json %>;
+    var routine2 = <%= raw @selected_routine2.to_json %>;
+    var routine3 = <%= raw @selected_routine3.to_json %>;
+    var avator1 = <%= raw @selected_avator1.to_json %>;
+    var avator2 = <%= raw @selected_avator2.to_json %>;
+    var avator3 = <%= raw @selected_avator3.to_json %>;
+    var user_routines = <%= raw @user_routines.to_json %>;
+    var user_categories = <%= raw @user_categories.to_json %>;
+<% end %>
+<!-- ############################################################### -->
+
 <div class="swiper-container">
     <div class="swiper-wrapper plaza answer-off">
         <!-- 左ページ -->
@@ -195,6 +219,7 @@
 <!-- Yes/Noボタン & 履歴/次へボタン -->
 <button type="button" class="nes-btn btn_enter">入力</button>
 <button type="button" class="nes-btn btn_plaza">意見参考</button>
+<button type="button" class="nes-btn btn_record">記録画面</button>
 <button type="button" class="nes-btn btn_yes">はい</button>
 <button type="button" class="nes-btn btn_no">いいえ</button>
 <button type="button" class="nes-btn btn_history">履歴</button>
