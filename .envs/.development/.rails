@@ -1,0 +1,5 @@
+RAILS_MASTER_KEY=7fafdf1b331ab6b1467a1c75805402c7
+RAILS_ENV=development
+
+# REDIS
+REDIS_CHANNEL_PREFIX=selfcare_system_development

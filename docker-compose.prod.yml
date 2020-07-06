@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  rails: &rails
+    build:
+      context: .
+      dockerfile: ./compose/production/rails/Dockerfile
+    image: selfcare_system_production_rails
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - selfcare_system_production_rails_asset_data:/app/public/assets
+      - selfcare_system_production_rails_upload_data:/app/public/uploads
+      - selfcare_system_production_rails_log_data:/app/log
+    env_file:
+      - ./.envs/.production/.rails
+      - ./.envs/.production/.mysql
+      - ./.envs/.production/.redis
+    command: /start
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/production/nginx/Dockerfile
+    image: selfcare_system_production_nginx
+    depends_on:
+      - rails
+    volumes:
+      - selfcare_system_production_nginx_data:/etc/nginx/conf.d
+      - selfcare_system_production_rails_asset_data:/assets
+      - selfcare_system_production_rails_upload_data:/uploads
+    ports: 
+      - "0.0.0.0:80:3000"
+
+  redis:
+    image: redis:6.0.4-alpine
+    
+  mysql:
+    image: mysql:8.0.18
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - selfcare_system_production_mysql_data:/var/lib/mysql
+    env_file: 
+      - ./.envs/.production/.mysql
+
+volumes:
+  selfcare_system_production_rails_asset_data:
+  selfcare_system_production_rails_upload_data:
+  selfcare_system_production_rails_log_data:    
+  selfcare_system_production_nginx_data:
+  selfcare_system_production_mysql_data:
