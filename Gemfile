@@ -52,6 +52,8 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  # Provide a comprehensive suite of tools for Ruby programming. Read more: https://github.com/castwide/solargraph
+  gem 'solargraph'  
 end
 
 

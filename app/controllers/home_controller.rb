@@ -450,7 +450,7 @@ class HomeController < ApplicationController
     # ???
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def routine_params
-        # TODO strong paramsを参考にして書き換えたりとかする
+        # TODO: strong paramsを参考にして書き換えたりとかする
         # 神谷先輩が書いた　何のためにあるのか分からない...
     end
 

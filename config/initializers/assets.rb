@@ -13,3 +13,13 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 Rails.application.config.assets.precompile += %w( *.js )
+
+# Allow overriding of the sprockets cache path
+# Copied from https://github.com/rails/sprockets/issues/283#issuecomment-578728257
+Rails.application.config.assets.configure do |env|
+    env.cache = Sprockets::Cache::FileStore.new(
+      ENV.fetch("RAILS_SPROCKETS_CACHE", "#{env.root}/tmp/cache/assets"),
+      Rails.application.config.assets.cache_limit,
+      env.logger
+    )
+end
